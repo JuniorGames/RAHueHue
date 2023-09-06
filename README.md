@@ -12,6 +12,12 @@
     
 Self-hosted **Javascript** emulation for various system.
 
+Este projeto foi editado por Helton Jr. do canal Junior Games no Youtube.
+
+https://www.youtube.com/@juniorgameslives
+
+Todos os créditos da criação do código são para os desenvolvedores originais, se quiser saber mais veja as informações oficiais logo abaixo. Não tenho intenção de mudar códigos padrões, fiz apenas uma adaptação para a versão RetroGames HueHue do Brasill com o MEME BR.
+
 <br>
 
 [![Button Website]][Website] 
@@ -22,9 +28,9 @@ Self-hosted **Javascript** emulation for various system.
     
 [![Button Contributors]][Contributors]   
  
-Join our Discord server:
+Official Discord server:
 
-[![Join our Discord server!](https://invite.casperiv.dev/?inviteCode=6akryGkETU&format=svg)](https://discord.gg/6akryGkETU)
+https://discord.gg/6akryGkETU
 
 </div>
 
