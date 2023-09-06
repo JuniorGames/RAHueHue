@@ -87,7 +87,7 @@
     <body>
         <div id = box>
             <input type = file id = input>
-            Drag ROM file or click here
+            RAHueHue ROMs.
         </div>
 
         <script>
@@ -122,29 +122,30 @@
 
                     return await new Promise(resolve => {
                         const cores = {
+                            "Atari 2600": "atari2600",
+                            "Atari 5200": "atari5200",
+                            "Atari 7800": "atari7800",
+                            "Atari Jaguar": "jaguar",
+                            "Atari Lynx": "lynx",
+                            "Bandai WonderSwan (Color)": "ws",
+                            "ColecoVision": "coleco"
+                            "NEC TurboGrafx-16/SuperGrafx/PC Engine": "pce",
+                            "NEC PC-FX": "pcfx",
                             "Nintendo 64": "n64",
                             "Nintendo Game Boy": "gb",
                             "Nintendo Game Boy Advance": "gba",
                             "Nintendo DS": "nds",
                             "Nintendo Entertainment System": "nes",
                             "Super Nintendo Entertainment System": "snes",
-                            "PlayStation": "psx",
-                            "Virtual Boy": "vb",
+                            "Nintendo Virtual Boy": "vb",
                             "Sega Mega Drive": "segaMD",
                             "Sega Master System": "segaMS",
                             "Sega CD": "segaCD",
-                            "Atari Lynx": "lynx",
                             "Sega 32X": "sega32x",
-                            "Atari Jaguar": "jaguar",
                             "Sega Game Gear": "segaGG",
                             "Sega Saturn": "segaSaturn",
-                            "Atari 7800": "atari7800",
-                            "Atari 2600": "atari2600",
-                            "NEC TurboGrafx-16/SuperGrafx/PC Engine": "pce",
-                            "NEC PC-FX": "pcfx",
                             "SNK NeoGeo Pocket (Color)": "ngp",
-                            "Bandai WonderSwan (Color)": "ws",
-                            "ColecoVision": "coleco"
+                            "Sony PlayStation": "psx",
                         }
 
                         const button = document.createElement("button")
