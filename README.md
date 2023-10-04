@@ -10,7 +10,7 @@
 [![Badge License]][License]
     
     
-Self-hosted **Javascript** emulation for various system.
+Emulador baseado em **Javascript** para vários sistemas.
 
 <br>
 
