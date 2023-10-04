@@ -20,7 +20,7 @@ https://www.youtube.com/@juniorgameslives
 
 Todos os créditos da criação do código são para os desenvolvedores originais, se quiser saber mais veja as informações oficiais logo abaixo. Não tenho intenção de mudar códigos padrões, fiz apenas uma adaptação para a versão RetroGames HueHue do Brasill com o MEME BR.
 
-<h1 align = center>Supported Systems</h1>
+<h1 align = center>Sistemas Suportados</h1>
 
 <br>
 
@@ -65,7 +65,7 @@ Todos os créditos da criação do código são para os desenvolvedores originai
 <br>
 <br>
 
-### Other
+### Outros
     
 **[PlayStation]**   | 
 **[Arcade]**   | 
@@ -73,11 +73,6 @@ Todos os créditos da criação do código são para os desenvolvedores originai
 **[MAME 2003]**
     
 </div>
-
-<br>
-
-***PSP is not yet supported***. Some of y'all may have seen that I pushed a "beta" ppsspp core, but this core is not ready for daily use. It still crashes randomly and any games that use 3d (so like, all of them) will just have a white screen (and might just crash). Do not open issues related to the "psp" core.
-
 
 <!-- 🎮 🎮 🎮 🎮 🎮 🎮 🎮 🎮 🎮 🎮 🎮 🎮 🎮 🎮 🎮 🎮 🎮 🎮 🎮 🎮 🎮 🎮 🎮 --->
 
