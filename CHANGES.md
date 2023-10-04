@@ -1,6 +1,36 @@
 # Changes
 
-# 4.0.6
+# 4.0.8
+- Fixed typo in virtual gamepad dpad.
+- Added updated desmume core.
+- Fixed key mapping (Thanks to [@allancoding](https://github.com/allancoding))
+- Fixed adblock message (Thanks to [@allancoding](https://github.com/allancoding))
+- Added `EJS_startButtonName` option.
+- Re-Added ability to drag and drop save states.
+- Fixed cheats menu.
+- Added popup message for Safari mobile users if game is not running.
+- Added `EJS_softLoad` option.
+- Added amiga core.
+- Added c64 core.
+
+# 4.0.7 [View Tree](https://github.com/EmulatorJS/EmulatorJS/tree/f579eb4c080f612723fd6a119b02173cafb37503)
+- Added rewind (Thanks to [@n-at](https://github.com/n-at))
+- Added slowdown (Thanks to [@n-at](https://github.com/n-at))
+- Fixed "zone" object in front of settings menu.
+- Fixed virtual gamepad alignment.
+- Add `EJS_fullscreenOnLoaded` option.
+- Add virtual gamepad toggle to the control menu (for touchscreen devices)
+- Fix gamepad ID showing as "undefined".
+- Added threaded cores.
+- Added joystick translations (Thanks to [@allancoding](https://github.com/allancoding))
+- Fixed fullscreen button tooltip (Thanks to [@allancoding](https://github.com/allancoding))
+- Added TurboGrafx-16, SuperGrafx, PC Engine, neo geo pocket, WonderSwan, PC-FX, and ColecoVision support. (Thanks to [@n-at](https://github.com/n-at))
+- Fixed cue file loading (Thanks to [@n-at](https://github.com/n-at))
+- Fixed ability to hide volume slider (Thanks to [@n-at](https://github.com/n-at))
+- Added new mame2003_plus core (now default mame2003 core)
+- Use keycodes instead of labels (Thanks to [@allancoding](https://github.com/allancoding))
+
+# 4.0.6 [View Tree](https://github.com/EmulatorJS/EmulatorJS/tree/5e338e7a888480cea331f6d4656bc8986a7d6b28)
 - Fixed n64 on iOS safari
 - virtual gamepads for atari2600, atari7800, lynx, jaguar, vb, 3do (Thanks to [@n-at](https://github.com/n-at))
 - control buttons for gba, vb, 3do, atari2600, atari7800, lynx, jaguar (Thanks to [@n-at](https://github.com/n-at))

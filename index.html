@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>RetroGames HueHue</title>
+        <title>EmulatorJS</title>
 
         <link rel = icon href = docs/favicon.ico sizes = "16x16 32x32 48x48 64x64" type = image/vnd.microsoft.icon>
         <meta name = viewport content = "width = device-width, initial-scale = 1">
@@ -87,7 +87,7 @@
     <body>
         <div id = box>
             <input type = file id = input>
-            RAHueHue ROMs.
+            Drag ROM file or click here
         </div>
 
         <script>
@@ -117,38 +117,38 @@
                     if (["col", "cv"].includes(ext))
                         return "coleco"
 
+                    if (["d64"].includes(ext))
+                        return "vice_x64"
+
                     if (["nds", "gba", "gb", "z64", "n64"].includes(ext))
                         return ext
 
                     return await new Promise(resolve => {
                         const cores = {
-                            "3dO Panasonic": "3do",
-                            "Arcade FBNeo": "arcade",
-                            "Arcade MAME": "mame2003",
-                            "Atari 2600": "atari2600",
-                            "Atari 5200": "atari5200",
-                            "Atari 7800": "atari7800",
-                            "Atari Jaguar": "jaguar",
-                            "Atari Lynx": "lynx",
-                            "Bandai WonderSwan (Color)": "ws",
-                            "ColecoVision": "coleco",
-                            "NEC TurboGrafx-16/SuperGrafx/PC Engine": "pce",
-                            "NEC PC-FX": "pcfx",
                             "Nintendo 64": "n64",
                             "Nintendo Game Boy": "gb",
                             "Nintendo Game Boy Advance": "gba",
                             "Nintendo DS": "nds",
                             "Nintendo Entertainment System": "nes",
                             "Super Nintendo Entertainment System": "snes",
-                            "Nintendo Virtual Boy": "vb",
+                            "PlayStation": "psx",
+                            "Virtual Boy": "vb",
                             "Sega Mega Drive": "segaMD",
                             "Sega Master System": "segaMS",
                             "Sega CD": "segaCD",
+                            "Atari Lynx": "lynx",
                             "Sega 32X": "sega32x",
+                            "Atari Jaguar": "jaguar",
                             "Sega Game Gear": "segaGG",
                             "Sega Saturn": "segaSaturn",
+                            "Atari 7800": "atari7800",
+                            "Atari 2600": "atari2600",
+                            "NEC TurboGrafx-16/SuperGrafx/PC Engine": "pce",
+                            "NEC PC-FX": "pcfx",
                             "SNK NeoGeo Pocket (Color)": "ngp",
-                            "Sony PlayStation": "psx",
+                            "Bandai WonderSwan (Color)": "ws",
+                            "ColecoVision": "coleco",
+                            "Commodore 64": "vice_x64"
                         }
 
                         const button = document.createElement("button")
@@ -163,7 +163,7 @@
                         }
 
                         button.onclick = () => resolve(select[select.selectedIndex].value)
-                        button.textContent = "Jogar"
+                        button.textContent = "Load game"
                         box.innerHTML = ""
 
                         box.appendChild(select)
@@ -193,27 +193,22 @@
                 if (window.location.hostname === "demo.emulatorjs.org") {
                     window.EJS_AdUrl = "https://ads.emulatorjs.org/";
                     window.EJS_ready = function() {
-                        detectAdBlock("https://ads.emulatorjs.org/?blocked");
+                        detectAdBlock("data:text/html;base64,PGh0bWw+PHN0eWxlPiNhZGJsb2Nre2JhY2tncm91bmQtY29sb3I6cmdiYSgwLDAsMCwuOCk7cG9zaXRpb246Zml4ZWQ7d2lkdGg6MTAwJTtoZWlnaHQ6MTAwJTt0b3A6MDtsZWZ0OjA7ei1pbmRleDoxMDAwO3RleHQtYWxpZ246Y2VudGVyO2NvbG9yOiNmZmZ9Ym9keSxodG1se2JhY2tncm91bmQtY29sb3I6dHJhbnNwYXJlbnR9PC9zdHlsZT48Ym9keSBzdHlsZT0ibWFyZ2luOjAiPjxkaXYgaWQ9ImFkYmxvY2siPjxoMT5IaSBBZGJsb2NrIFVzZXIhPC9oMT48cD5BZHMgb24gdGhpcyBwYWdlIG1heSBjb21lIGFuZCBnbyBkZXBlbmRpbmcgb24gaG93IG1hbnkgcGVvcGxlIGFyZSBmdW5kaW5nIHRoaXMgcHJvamVjdC48YnI+WW91IGNhbiBoZWxwIGZ1bmQgdGhpcyBwcm9qZWN0IG9uPGEgaHJlZj0iaHR0cHM6Ly9wYXRyZW9uLmNvbS9FbXVsYXRvckpTIj5wYXRyZW9uPC9hPjwvcD48L2Rpdj48L2JvZHk+PC9odG1sPg==");
                     }
                 }
                 
-
                 script.src = "data/loader.js";
                 document.body.appendChild(script);
             }
-            async function detectAdBlock(url) {
-                let adBlockEnabled = false
-                const googleAdUrl = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'
+            function detectAdBlock(url) {
+                let adBlockEnabled = false;
                 try {
-                    await fetch(new Request(googleAdUrl)).catch(_ => adBlockEnabled = true)
+                    window.EJS_AdUrl = document.querySelector('iframe[src="'+window.EJS_AdUrl+'"]').src;
                 } catch (e) {
-                    adBlockEnabled = true
-                } finally {
-                    window.EJS_ready = function() {
-                        if (adBlockEnabled) {
-                            window.EJS_adBlocked("https://emulatorjs.org/?blocked");
-                        }
-                    }
+                    adBlockEnabled = true;
+                }
+                if (adBlockEnabled) {
+                    window.EJS_adBlocked(url);
                 }
             }
             box.ondragover = () => box.setAttribute("drag", true);
