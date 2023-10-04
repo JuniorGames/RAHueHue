@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>EmulatorJS</title>
+        <title>RetroHueHue JS</title>
 
         <link rel = icon href = docs/favicon.ico sizes = "16x16 32x32 48x48 64x64" type = image/vnd.microsoft.icon>
         <meta name = viewport content = "width = device-width, initial-scale = 1">
@@ -87,7 +87,7 @@
     <body>
         <div id = box>
             <input type = file id = input>
-            Drag ROM file or click here
+            Carregue as Roms
         </div>
 
         <script>
@@ -125,30 +125,31 @@
 
                     return await new Promise(resolve => {
                         const cores = {
-                            "Nintendo 64": "n64",
+                            "Atari 2600": "atari2600",
+                            "Atari 5200": "atari5200",
+                            "Atari 7800": "atari7800",
+                            "Atari Lynx": "lynx",
+                            "Atari Jaguar": "jaguar",
+                            "Bandai WonderSwan (Color)": "ws",
+                            "ColecoVision": "coleco",
+                            "Commodore 64": "vice_x64"
+                            "NEC TurboGrafx-16/SuperGrafx/PC Engine": "pce",
+                            "NEC PC-FX": "pcfx",
                             "Nintendo Game Boy": "gb",
                             "Nintendo Game Boy Advance": "gba",
                             "Nintendo DS": "nds",
                             "Nintendo Entertainment System": "nes",
                             "Super Nintendo Entertainment System": "snes",
-                            "PlayStation": "psx",
-                            "Virtual Boy": "vb",
+                            "Nintendo 64": "n64",
+                            "Nintendo Virtual Boy": "vb",
                             "Sega Mega Drive": "segaMD",
                             "Sega Master System": "segaMS",
                             "Sega CD": "segaCD",
-                            "Atari Lynx": "lynx",
                             "Sega 32X": "sega32x",
-                            "Atari Jaguar": "jaguar",
                             "Sega Game Gear": "segaGG",
                             "Sega Saturn": "segaSaturn",
-                            "Atari 7800": "atari7800",
-                            "Atari 2600": "atari2600",
-                            "NEC TurboGrafx-16/SuperGrafx/PC Engine": "pce",
-                            "NEC PC-FX": "pcfx",
                             "SNK NeoGeo Pocket (Color)": "ngp",
-                            "Bandai WonderSwan (Color)": "ws",
-                            "ColecoVision": "coleco",
-                            "Commodore 64": "vice_x64"
+                            "PlayStation": "psx",
                         }
 
                         const button = document.createElement("button")
@@ -163,7 +164,7 @@
                         }
 
                         button.onclick = () => resolve(select[select.selectedIndex].value)
-                        button.textContent = "Load game"
+                        button.textContent = "Jogar"
                         box.innerHTML = ""
 
                         box.appendChild(select)
