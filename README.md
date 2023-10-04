@@ -18,8 +18,7 @@ Este projeto foi editado por Helton Jr. do canal Junior Games no Youtube.
 
 https://www.youtube.com/@juniorgameslives
 
-Não tenho nenhuma intenção de mudar códigos padrões, fiz apenas uma adaptação para a versão RetroGames HueHue do Brasil com o MEME BR para uso de testes de roms.
-Todos os créditos da criação dos códigos são para os desenvolvedores originais, se quiseren saber mais veja as informações oficiais logo abaixo no site oficial. 
+Não tenho nenhuma intenção de mudar códigos padrões, fiz apenas uma adaptação para a versão RetroGames HueHue do Brasil com o MEME BR para uso de testes de roms. Todos os créditos da criação dos códigos são para os desenvolvedores originais, para mais informações oficiais visitem o site https://emulatorjs.org/ e conheçam o projeto original.
 
 <h1 align = center>Sistemas Suportados</h1>
 
