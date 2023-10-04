@@ -5,6 +5,11 @@
 <img width = 300 src = docs/Logo.png#gh-light-mode-only> 
  
 <br>
+<br>
+
+[![Badge License]][License]
+ 
+<br>
 
 Emulador baseado em **Javascript** para vários sistemas.
 
