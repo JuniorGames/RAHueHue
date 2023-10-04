@@ -19,67 +19,6 @@ Este projeto foi editado por Helton Jr. do canal Junior Games no Youtube.
 https://www.youtube.com/@juniorgameslives
 
 Todos os créditos da criação do código são para os desenvolvedores originais, se quiser saber mais veja as informações oficiais logo abaixo. Não tenho intenção de mudar códigos padrões, fiz apenas uma adaptação para a versão RetroGames HueHue do Brasill com o MEME BR.
- 
-Official Discord server:
-
-https://discord.gg/6akryGkETU
-
-</div>
-
-<br>
-
-**As of EmulatorJS version 4.0, this project is no longer a reverse-engineered version of the emulatorjs.com project. It is now a complete re-write,**
-
-<br>
-
-**README BEFORE YOU UPDATE:** EmulatorJS Version 4.0 is a complete re-write of the application. At least some bugs are expected. If you did any communicating with the emulator, there is a 100% chance you will need to re-write your project, and to people with active branches of this project, I wish you luck with merge conflicts (I'm very sorry). The emulator object can be accessed through the `window.EJS_emulator` object.
-
-It is **HIGHLY** suggested that you update to 4.0 ASAP.
-
-<br>
-
-### Ads
-
-*This project has no ads.* <br>
-*Although, the demo page currently has an ad to help fund this project.* <br>
-*Ads on the demo page may come and go depending on how many people are* <br>
-*funding this project.* <br>
-
-*You can help fund this project on* ***[patreon]***
-
-<br>
-
-
-### Issues
-
-*If something doesn't work, please consider opening an* ***[Issue]*** <br>
-*with as many details as possible, as well as the console log.*
-
-<br>
-
-### Extensions
-
- **[GameLibrary]**
-
-   *A library overview for your **ROM** folder.*
-
-<br>
-
-### Development:
-
-*Run a local server with:* 
-```
-npm i
-npm start
-```
-
-<br>
-
-**>> When reporting bugs, please specify that you are using the old version**
-
-<br>
-<br>
-<br>
 
 <h1 align = center>Supported Systems</h1>
 
