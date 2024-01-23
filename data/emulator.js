@@ -239,7 +239,7 @@ class EmulatorJS {
         })
     }
     checkForUpdates() {
-        fetch('https://raw.githack.com/EmulatorJS/EmulatorJS/main/data/version.json').then(response => {
+        fetch('https://cdn.emulatorjs.org/stable/data/version.json').then(response => {
             if (response.ok) {
                 response.text().then(body => {
                     let version = JSON.parse(body);
@@ -251,8 +251,8 @@ class EmulatorJS {
         })
     }
     constructor(element, config) {
-        this.ejs_version = "4.0.8";
-        this.ejs_num_version = 40.8;
+        this.ejs_version = "4.0.9";
+        this.ejs_num_version = 40.9;
         this.debug = (window.EJS_DEBUG_XX === true);
         if (this.debug || (window.location && ['localhost', '127.0.0.1'].includes(location.hostname))) this.checkForUpdates();
         this.netplayEnabled = (window.EJS_DEBUG_XX === true) && (window.EJS_EXPERIMENTAL_NETPLAY === true);
@@ -284,6 +284,7 @@ class EmulatorJS {
         this.bindListeners();
         this.config.netplayUrl = this.config.netplayUrl || "https://netplay.emulatorjs.org";
         this.fullscreen = false;
+        this.supportsWebgl2 = !!document.createElement('canvas').getContext('webgl2');
         this.isMobile = (function() {
             let check = false;
             (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))) check = true;})(navigator.userAgent||navigator.vendor||window.opera);
@@ -325,6 +326,7 @@ class EmulatorJS {
         }
         
         this.createStartButton();
+        this.handleResize();
     }
     setColor(color) {
         if (typeof color !== "string") color = "";
@@ -636,20 +638,39 @@ class EmulatorJS {
                 this.initGameCore(js, wasm, thread);
             });
         }
-        this.storage.core.get(this.getCore()+'-wasm.data').then((result) => {
+        let filename = this.getCore()+(this.config.threads ? "-thread" : "")+(this.supportsWebgl2 ? "" : "-legacy")+"-wasm.data";
+        this.storage.core.get(filename).then((result) => {
             if (result && result.version === this.version && !this.debug) {
                 gotCore(result.data);
                 return;
             }
-            let corePath = 'cores/'+this.getCore()+(this.config.threads ? "-thread" : "")+'-wasm.data';
+            let corePath = 'cores/'+filename;
             this.downloadFile(corePath, (res) => {
                 if (res === -1) {
-                    this.textElem.innerText = this.localization('Network Error');
-                    this.textElem.style.color = "red";
+                    console.log("File not found, attemping to fetch from emulatorjs cdn");
+                    this.downloadFile("https://cdn.emulatorjs.org/stable/data/"+corePath, (res) => {
+                        if (res === -1) {
+                            if (!this.supportsWebgl2) {
+                                this.textElem.innerText = this.localization('Outdated graphics driver');
+                            } else {
+                                this.textElem.innerText = this.localization('Network Error');
+                            }
+                            this.textElem.style.color = "red";
+                            return;
+                        }
+                        console.warn("File was not found locally, but was found on the emulatorjs cdn.\nIt is recommended to download the latest release from here: https://cdn.emulatorjs.org/releases/");
+                        gotCore(res.data);
+                        this.storage.core.put(filename, {
+                            version: this.version,
+                            data: res.data
+                        });
+                    }, (progress) => {
+                        this.textElem.innerText = this.localization("Download Game Core") + progress;
+                    }, true, {responseType: "arraybuffer", method: "GET"})
                     return;
                 }
                 gotCore(res.data);
-                this.storage.core.put(this.getCore()+'-wasm.data', {
+                this.storage.core.put(filename, {
                     version: this.version,
                     data: res.data
                 });
@@ -664,9 +685,12 @@ class EmulatorJS {
         script.src = URL.createObjectURL(new Blob([js], {type: "application/javascript"}));
         document.body.appendChild(script);
     }
-    getBaseFileName() {
+    getBaseFileName(force) {
         //Only once game and core is loaded
-        if (!this.started) return null;
+        if (!this.started && !force) return null;
+        if (force && this.config.gameUrl !== "game" && !this.config.gameUrl.startsWith("blob:")) {
+            return this.config.gameUrl.split('/').pop().split("#")[0].split("?")[0];
+        }
         if (typeof this.config.gameName === "string") {
             const invalidCharacters = /[#<$+%>!`&*'|{}/\\?"=@:^\r\n]/ig;
             const name = this.config.gameName.replace(invalidCharacters, "").trim();
@@ -874,10 +898,6 @@ class EmulatorJS {
         })
     }
     downloadRom() {
-        const extractFileNameFromUrl = url => {
-            if (!url) return null;
-            return url.split('/').pop().split("#")[0].split("?")[0];
-        };
         const supportsExt = (ext) => {
             const core = this.getCore();
             if (!this.extensions[core]) return false;
@@ -889,13 +909,13 @@ class EmulatorJS {
 
             const gotGameData = (data) => {
                 if (['arcade', 'mame2003'].includes(this.getCore(true))) {
-                    this.fileName = extractFileNameFromUrl(this.config.gameUrl);
+                    this.fileName = this.getBaseFileName(true);
                     FS.writeFile(this.fileName, new Uint8Array(data));
                     resolve();
                     return;
                 }
 
-                const altName = this.config.gameUrl.startsWith("blob:") ? (this.config.gameName || "game") : extractFileNameFromUrl(this.config.gameUrl);
+                const altName = this.getBaseFileName(true);
 
                 let disableCue = false;
                 if (['pcsx_rearmed', 'genesis_plus_gx', 'picodrive', 'mednafen_pce', 'vice_x64'].includes(this.getCore()) && this.config.disableCue === undefined) {
@@ -1098,6 +1118,7 @@ class EmulatorJS {
                     if (this.debug) console.warn("Could not fullscreen on load");
                 }
             }
+            this.menu.open();
             if (this.isSafari && this.isMobile) {
                 //Safari is --- funny
                 this.checkStarted();
@@ -1156,6 +1177,9 @@ class EmulatorJS {
         this.elements.statePopupPanel.innerText = "Drop save state here to load";
         this.elements.statePopupPanel.style["text-align"] = "center";
         this.elements.statePopupPanel.style["font-size"] = "28px";
+        
+        //to fix a funny apple bug
+        this.addEventListener(window, "webkitfullscreenchange mozfullscreenchange fullscreenchange MSFullscreenChange", () => {setTimeout(this.handleResize.bind(this), 0)});
         this.addEventListener(this.elements.parent, "dragenter", (e) => {
             e.preventDefault();
             if (!this.started) return;
@@ -1281,6 +1305,27 @@ class EmulatorJS {
             a.click();
             hideMenu();
         });
+
+        let screenMediaRecorder = null;
+        const startScreenRecording = addButton("Start screen recording", false, () => {
+            if (screenMediaRecorder !== null) {
+                screenMediaRecorder.stop();
+            }
+            screenMediaRecorder = this.screenRecord();
+            startScreenRecording.setAttribute("hidden", "hidden");
+            stopScreenRecording.removeAttribute("hidden");
+            hideMenu();
+        });
+        const stopScreenRecording = addButton("Stop screen recording", true, () => {
+            if (screenMediaRecorder !== null) {
+                screenMediaRecorder.stop();
+                screenMediaRecorder = null;
+            }
+            startScreenRecording.removeAttribute("hidden");
+            stopScreenRecording.setAttribute("hidden", "hidden");
+            hideMenu();
+        });
+
         const qSave = addButton("Quick Save", false, () => {
             const slot = this.settings['save-state-slot'] ? this.settings['save-state-slot'] : "1";
             this.gameManager.quickSave(slot);
@@ -1295,6 +1340,8 @@ class EmulatorJS {
         });
         this.elements.contextMenu = {
             screenshot: screenshot,
+            startScreenRecording: startScreenRecording,
+            stopScreenRecording: stopScreenRecording,
             save: qSave,
             load: qLoad
         }
@@ -1395,6 +1442,7 @@ class EmulatorJS {
         
         if (this.config.buttonOpts) {
             if (this.config.buttonOpts.screenshot === false) screenshot.setAttribute("hidden", "");
+            if (this.config.buttonOpts.screenRecord === false) startScreenRecording.setAttribute("hidden", "");
             if (this.config.buttonOpts.quickSave === false) qSave.setAttribute("hidden", "");
             if (this.config.buttonOpts.quickLoad === false) qLoad.setAttribute("hidden", "");
         }
@@ -1472,6 +1520,12 @@ class EmulatorJS {
     }
     createBottomMenuBar() {
         this.elements.menu = this.createElement("div");
+        
+        //prevent weird glitch on some devices
+        this.elements.menu.style.opacity = 0;
+        this.on("start", (e) => {
+            this.elements.menu.style.opacity = "";
+        })
         this.elements.menu.classList.add("ejs_menu_bar");
         this.elements.menu.classList.add("ejs_menu_bar_hidden");
         
@@ -1536,6 +1590,7 @@ class EmulatorJS {
         })
         
         
+        let paddingSet = false;
         //Now add buttons
         const addButton = (title, image, callback, element, both) => {
             const button = this.createElement("button");
@@ -1546,7 +1601,7 @@ class EmulatorJS {
             svg.innerHTML = image;
             const text = this.createElement("span");
             text.innerText = this.localization(title);
-            if (title == "Enter Fullscreen" || title == "Exit Fullscreen") text.classList.add("ejs_menu_text_right");
+            if (paddingSet) text.classList.add("ejs_menu_text_right");
             text.classList.add("ejs_menu_text");
             
             button.classList.add("ejs_menu_button");
@@ -1702,6 +1757,7 @@ class EmulatorJS {
         const spacer = this.createElement("span");
         spacer.classList.add("ejs_menu_bar_spacer");
         this.elements.menu.appendChild(spacer);
+        paddingSet = true;
         
         const volumeSettings = this.createElement("div");
         volumeSettings.classList.add("ejs_volume_parent");
@@ -1764,6 +1820,16 @@ class EmulatorJS {
         }
 
         this.elements.menu.appendChild(volumeSettings);
+
+        const contextMenuButton = addButton("Context Menu", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg>', () => {
+            if (this.elements.contextmenu.style.display == "none") {
+                this.elements.contextmenu.style.display = "block";
+                this.elements.contextmenu.style.left = (getComputedStyle(this.elements.parent).width.split("px")[0]/2 - getComputedStyle(this.elements.contextmenu).width.split("px")[0]/2)+"px";
+                this.elements.contextmenu.style.top = (getComputedStyle(this.elements.parent).height.split("px")[0]/2 - getComputedStyle(this.elements.contextmenu).height.split("px")[0]/2)+"px";
+            } else {
+                this.elements.contextmenu.style.display = "none";
+            }
+        });
         
         this.settingParent = this.createElement("div");
         this.settingsMenuOpen = false;
@@ -1869,6 +1935,7 @@ class EmulatorJS {
             playPause: [pauseButton, playButton],
             restart: [restartButton],
             settings: [settingButton],
+            contextMenu: [contextMenuButton],
             fullscreen: [enter, exit],
             saveState: [saveState],
             loadState: [loadState],
@@ -1887,6 +1954,7 @@ class EmulatorJS {
                 pauseButton.style.display = "none";
                 playButton.style.display = "none";
             }
+            if (this.config.buttonOpts.contextMenuButton === false) contextMenuButton.style.display = "none"
             if (this.config.buttonOpts.restart === false) restartButton.style.display = "none"
             if (this.config.buttonOpts.settings === false) settingButton[0].style.display = "none"
             if (this.config.buttonOpts.fullscreen === false) {
@@ -3581,9 +3649,13 @@ class EmulatorJS {
                 }, 250)
             }
         }
+        const positionInfo = this.elements.parent.getBoundingClientRect();
+        this.game.parentElement.classList.toggle("ejs_small_screen", positionInfo.width <= 575);
+        //This wouldnt work using :not()... strange.
+        this.game.parentElement.classList.toggle("ejs_big_screen", positionInfo.width > 575);
+        
         if (!this.Module) return;
         const dpr = window.devicePixelRatio || 1;
-        const positionInfo = this.elements.parent.getBoundingClientRect();
         const width = positionInfo.width * dpr;
         const height = (positionInfo.height * dpr);
         this.Module.setCanvasSize(width, height);
@@ -4786,5 +4858,109 @@ class EmulatorJS {
     cheatChanged(checked, code, index) {
         this.gameManager.setCheat(index, checked, code);
     }
+
+    collectScreenRecordingMediaTracks(canvasEl, fps) {
+        let videoTrack = null;
+        const videoTracks = canvasEl.captureStream(fps).getVideoTracks();
+        if (videoTracks.length !== 0) {
+            videoTrack = videoTracks[0];
+        } else {
+            console.error('Unable to capture video stream');
+            return null;
+        }
+
+        let audioTrack = null;
+        if (window.AL && window.AL.currentCtx && window.AL.currentCtx.audioCtx) {
+            const alContext = window.AL.currentCtx;
+            const audioContext = alContext.audioCtx;
+
+            const gainNodes = [];
+            for (let sourceIdx in alContext.sources) {
+                gainNodes.push(alContext.sources[sourceIdx].gain);
+            }
+
+            const merger = audioContext.createChannelMerger(gainNodes.length);
+            gainNodes.forEach(node => node.connect(merger));
+
+            const destination = audioContext.createMediaStreamDestination();
+            merger.connect(destination);
+
+            const audioTracks = destination.stream.getAudioTracks();
+            if (audioTracks.length !== 0) {
+                audioTrack = audioTracks[0];
+            }
+        }
+
+        const stream = new MediaStream();
+        if (videoTrack && videoTrack.readyState === 'live') {
+            stream.addTrack(videoTrack);
+        }
+        if (audioTrack && audioTrack.readyState === 'live') {
+            stream.addTrack(audioTrack);
+        }
+        return stream;
+    }
+
+    screenRecord() {
+        const captureScreenWidth= (this.config.screenRecording && (typeof this.config.screenRecording.width == "number")) ? this.config.screenRecording.width : 800;
+        const captureScreenHeight = (this.config.screenRecording && (typeof this.config.screenRecording.height == "number")) ? this.config.screenRecording.height : 600;
+        const captureFps = (this.config.screenRecording && (typeof this.config.screenRecording.fps == "number")) ? this.config.screenRecording.fps : 30;
+        const captureVideoBitrate = (this.config.screenRecording && (typeof this.config.screenRecording.videoBitrate == "number")) ? this.config.screenRecording.videoBitrate : 2 * 1024 * 1014;
+        const captureAudioBitrate = (this.config.screenRecording && (typeof this.config.screenRecording.audioBitrate == "number")) ? this.config.screenRecording.audioBitrate : 256 * 1024;
+
+        const captureCanvas = document.createElement('canvas');
+        captureCanvas.width = captureScreenWidth;
+        captureCanvas.height = captureScreenHeight;
+        captureCanvas.style.position = 'absolute';
+        captureCanvas.style.top = '-999px';
+        captureCanvas.style.bottom = '-999px';
+        document.getElementsByTagName('body')[0].append(captureCanvas);
+
+        const captureCtx = captureCanvas.getContext('2d', { alpha: false });
+        captureCtx.fillStyle = '#000';
+
+        let animation = true;
+
+        const drawNextFrame = () => {
+            const scaleX = captureScreenWidth / this.canvas.width;
+            const scaleY = captureScreenHeight / this.canvas.height;
+            const scale = Math.max(scaleY, scaleX);
+            const width = this.canvas.width * scale;
+            const height = this.canvas.height * scale;
+            const startX = (captureScreenWidth - width) / 2;
+            const startY = (captureScreenHeight - height) / 2;
+            captureCtx.drawImage(this.canvas, Math.round(startX), Math.round(startY), Math.round(width), Math.round(height));
+            if (animation) {
+                requestAnimationFrame(drawNextFrame);
+            }
+        };
+        requestAnimationFrame(drawNextFrame);
+
+        const chunks = [];
+        const tracks = this.collectScreenRecordingMediaTracks(captureCanvas, captureFps);
+        const recorder = new MediaRecorder(tracks, {
+            videoBitsPerSecond: captureVideoBitrate,
+            audioBitsPerSecond: captureAudioBitrate,
+        });
+        recorder.addEventListener('dataavailable', e => {
+            chunks.push(e.data);
+        });
+        recorder.addEventListener('stop', () => {
+            const blob = new Blob(chunks);
+            const url = URL.createObjectURL(blob);
+            const date = new Date();
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = this.getBaseFileName()+"-"+date.getMonth()+"-"+date.getDate()+"-"+date.getFullYear()+".webm";
+            a.click();
+
+            animation = false;
+            captureCanvas.remove();
+        });
+        recorder.start();
+
+        return recorder;
+    }
+
 }
 window.EmulatorJS = EmulatorJS;
