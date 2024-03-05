@@ -1,5 +1,5 @@
 class EmulatorJS {
-    version = 11; //Increase by 1 when cores are updated
+    version = 12; //Increase by 1 when cores are updated
     getCore(generic) {
         const core = this.config.system;
         /*todo:
@@ -26,8 +26,8 @@ class EmulatorJS {
                 'gearcoleco': 'coleco',
                 'genesis_plus_gx': 'sega',
                 'handy': 'lynx',
-                'mame2003': 'mame2003',
-                'mame2003_plus': 'mame2003',
+                'mame2003': 'mame',
+                'mame2003_plus': 'mame',
                 'mednafen_ngp': 'ngp',
                 'mednafen_pce': 'pce',
                 'mednafen_pcfx': 'pcfx',
@@ -48,7 +48,11 @@ class EmulatorJS {
                 'virtualjaguar': 'jaguar',
                 'yabause': 'segaSaturn',
                 'puae': 'amiga',
-                'vice_x64': 'c64'
+                'vice_x64sc': 'c64',
+                'vice_x128': 'c128',
+                'vice_xpet': 'pet',
+                'vice_xplus4': 'plus4',
+                'vice_xvic': 'vic20'
             }
             return options[core] || core;
         }
@@ -71,7 +75,7 @@ class EmulatorJS {
             'vb': 'beetle_vb',
             'n64': 'mupen64plus_next',
             'nds': 'melonds',
-            'mame2003': 'mame2003_plus',
+            'mame': 'mame2003_plus',
             'arcade': 'fbneo',
             'psx': 'pcsx_rearmed',
             '3do': 'opera',
@@ -82,10 +86,17 @@ class EmulatorJS {
             'ws': 'mednafen_wswan',
             'coleco': 'gearcoleco',
             'amiga': 'puae',
-            'c64': 'vice_x64'
+            'c64': 'vice_x64sc',
+            'c128': 'vice_x128',
+            'pet': 'vice_xpet',
+            'plus4': 'vice_xplus4',
+            'vic20': 'vice_xvic'
         }
         if (this.isSafari && this.isMobile && this.getCore(true) === "n64") {
             return "parallel_n64";
+        }
+        if (!this.supportsWebgl2 && this.getCore(true) === "psx") {
+            return "mednafen_psx_hw";
         }
         return options[core] || core;
     }
@@ -124,6 +135,11 @@ class EmulatorJS {
         'snes9x': ['smc', 'sfc', 'swc', 'fig', 'bs', 'st'],
         'stella2014': ['a26', 'bin', 'zip'],
         'vice_x64': ['d64', 'd6z', 'd71', 'd7z', 'd80', 'd81', 'd82', 'd8z', 'g64', 'g6z', 'g41', 'g4z', 'x64', 'x6z', 'nib', 'nbz', 'd2m', 'd4m', 't64', 'tap', 'tcrt', 'prg', 'p00', 'crt', 'bin', 'cmd', 'm3u', 'vfl', 'vsf', 'zip', '7z', 'gz', '20', '40', '60', 'a0', 'b0', 'rom'],
+        'vice_x64sc': ['d64', 'd6z', 'd71', 'd7z', 'd80', 'd81', 'd82', 'd8z', 'g64', 'g6z', 'g41', 'g4z', 'x64', 'x6z', 'nib', 'nbz', 'd2m', 'd4m', 't64', 'tap', 'tcrt', 'prg', 'p00', 'crt', 'bin', 'cmd', 'm3u', 'vfl', 'vsf', 'zip', '7z', 'gz', '20', '40', '60', 'a0', 'b0', 'rom'],
+        'vice_x128': ['d64', 'd6z', 'd71', 'd7z', 'd80', 'd81', 'd82', 'd8z', 'g64', 'g6z', 'g41', 'g4z', 'x64', 'x6z', 'nib', 'nbz', 'd2m', 'd4m', 't64', 'tap', 'tcrt', 'prg', 'p00', 'crt', 'bin', 'cmd', 'm3u', 'vfl', 'vsf', 'zip', '7z', 'gz', '20', '40', '60', 'a0', 'b0', 'rom'],
+        'vice_xpet': ['d64', 'd6z', 'd71', 'd7z', 'd80', 'd81', 'd82', 'd8z', 'g64', 'g6z', 'g41', 'g4z', 'x64', 'x6z', 'nib', 'nbz', 'd2m', 'd4m', 't64', 'tap', 'tcrt', 'prg', 'p00', 'crt', 'bin', 'cmd', 'm3u', 'vfl', 'vsf', 'zip', '7z', 'gz', '20', '40', '60', 'a0', 'b0', 'rom'],
+        'vice_xplus4': ['d64', 'd6z', 'd71', 'd7z', 'd80', 'd81', 'd82', 'd8z', 'g64', 'g6z', 'g41', 'g4z', 'x64', 'x6z', 'nib', 'nbz', 'd2m', 'd4m', 't64', 'tap', 'tcrt', 'prg', 'p00', 'crt', 'bin', 'cmd', 'm3u', 'vfl', 'vsf', 'zip', '7z', 'gz', '20', '40', '60', 'a0', 'b0', 'rom'],
+        'vice_xvic': ['d64', 'd6z', 'd71', 'd7z', 'd80', 'd81', 'd82', 'd8z', 'g64', 'g6z', 'g41', 'g4z', 'x64', 'x6z', 'nib', 'nbz', 'd2m', 'd4m', 't64', 'tap', 'tcrt', 'prg', 'p00', 'crt', 'bin', 'cmd', 'm3u', 'vfl', 'vsf', 'zip', '7z', 'gz', '20', '40', '60', 'a0', 'b0', 'rom'],
         'virtualjaguar': ['j64', 'jag', 'rom', 'abs', 'cof', 'bin', 'prg'],
         'yabause': ['cue', 'iso', 'ccd', 'mds', 'chd', 'zip', 'm3u']
     }
@@ -244,15 +260,15 @@ class EmulatorJS {
                 response.text().then(body => {
                     let version = JSON.parse(body);
                     if (this.ejs_num_version < version.current_version) {
-                        console.log('Using emulatorjs version ' + this.ejs_num_version + ' but the newest version is ' + version.current_version + '\nopen https://github.com/EmulatorJS/EmulatorJS to update');
+                        console.log('Using EmulatorJS version ' + this.ejs_num_version + ' but the newest version is ' + version.current_version + '\nopen https://github.com/EmulatorJS/EmulatorJS to update');
                     }
                 })
             }
         })
     }
     constructor(element, config) {
-        this.ejs_version = "4.0.9";
-        this.ejs_num_version = 40.9;
+        this.ejs_version = "4.0.11";
+        this.ejs_num_version = 401.1;
         this.debug = (window.EJS_DEBUG_XX === true);
         if (this.debug || (window.location && ['localhost', '127.0.0.1'].includes(location.hostname))) this.checkForUpdates();
         this.netplayEnabled = (window.EJS_DEBUG_XX === true) && (window.EJS_EXPERIMENTAL_NETPLAY === true);
@@ -291,12 +307,21 @@ class EmulatorJS {
             return check;
         })();
         this.isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-        this.storage = {
-            rom: new window.EJS_STORAGE("EmulatorJS-roms", "rom"),
-            bios: new window.EJS_STORAGE("EmulatorJS-bios", "bios"),
-            core: new window.EJS_STORAGE("EmulatorJS-core", "core"),
-            states: new window.EJS_STORAGE("EmulatorJS-states", "states")
+        if (this.config.disableDatabases) {
+            this.storage = {
+                rom: new window.EJS_DUMMYSTORAGE(),
+                bios: new window.EJS_DUMMYSTORAGE(),
+                core: new window.EJS_DUMMYSTORAGE()
+            }
+        } else {
+            this.storage = {
+                rom: new window.EJS_STORAGE("EmulatorJS-roms", "rom"),
+                bios: new window.EJS_STORAGE("EmulatorJS-bios", "bios"),
+                core: new window.EJS_STORAGE("EmulatorJS-core", "core")
+            }
         }
+        // This is not cache. This is save data
+        this.storage.states = new window.EJS_STORAGE("EmulatorJS-states", "states");
         
         this.game.classList.add("ejs_game");
         if (typeof this.config.backgroundImg === "string") {
@@ -494,21 +519,21 @@ class EmulatorJS {
         }
         return text;
     }
+    isCompressed(data) { //https://www.garykessler.net/library/file_sigs.html
+        //todo. Use hex instead of numbers
+        if ((data[0] === 80 && data[1] === 75) && ((data[2] === 3 && data[3] === 4) || (data[2] === 5 && data[3] === 6) || (data[2] === 7 && data[3] === 8))) {
+            return 'zip';
+        } else if (data[0] === 55 && data[1] === 122 && data[2] === 188 && data[3] === 175 && data[4] === 39 && data[5] === 28) {
+            return '7z';
+        } else if ((data[0] === 82 && data[1] === 97 && data[2] === 114 && data[3] === 33 && data[4] === 26 && data[5] === 7) && ((data[6] === 0) || (data[6] === 1 && data[7] == 0))) {
+            return 'rar';
+        }
+    }
     checkCompression(data, msg, fileCbFunc) {
         if (msg) {
             this.textElem.innerText = msg;
         }
         //to be put in another file
-        function isCompressed(data) { //https://www.garykessler.net/library/file_sigs.html
-            //todo. Use hex instead of numbers
-            if ((data[0] === 80 && data[1] === 75) && ((data[2] === 3 && data[3] === 4) || (data[2] === 5 && data[3] === 6) || (data[2] === 7 && data[3] === 8))) {
-                return 'zip';
-            } else if (data[0] === 55 && data[1] === 122 && data[2] === 188 && data[3] === 175 && data[4] === 39 && data[5] === 28) {
-                return '7z';
-            } else if ((data[0] === 82 && data[1] === 97 && data[2] === 114 && data[3] === 33 && data[4] === 26 && data[5] === 7) && ((data[6] === 0) || (data[6] === 1 && data[7] == 0))) {
-                return 'rar';
-            }
-        }
         const createWorker = (path) => {
             return new Promise((resolve, reject) => {
                 this.downloadFile(path, (res) => {
@@ -595,7 +620,7 @@ class EmulatorJS {
                 })
             })
         }
-        const compression = isCompressed(data.slice(0, 10));
+        const compression = this.isCompressed(data.slice(0, 10));
         if (compression) {
             //Need to do zip and rar still
             if (compression === "7z") {
@@ -638,7 +663,8 @@ class EmulatorJS {
                 this.initGameCore(js, wasm, thread);
             });
         }
-        let filename = this.getCore()+(this.config.threads ? "-thread" : "")+(this.supportsWebgl2 ? "" : "-legacy")+"-wasm.data";
+        let legacy = (this.supportsWebgl2 ? "" : "-legacy");
+        let filename = this.getCore()+(this.config.threads ? "-thread" : "")+legacy+"-wasm.data";
         this.storage.core.get(filename).then((result) => {
             if (result && result.version === this.version && !this.debug) {
                 gotCore(result.data);
@@ -703,7 +729,7 @@ class EmulatorJS {
     saveInBrowserSupported() {
         return !!window.indexedDB && (typeof this.config.gameName === "string" || !this.config.gameUrl.startsWith("blob:"));
     }
-    displayMessage(message) {
+    displayMessage(message, time) {
         if (!this.msgElem) {
             this.msgElem = this.createElement("div");
             this.msgElem.classList.add("ejs_message");
@@ -712,7 +738,7 @@ class EmulatorJS {
         clearTimeout(this.msgTimeout);
         this.msgTimeout = setTimeout(() => {
             this.msgElem.innerText = "";
-        }, 3000)
+        }, (typeof time === "number" && time > 0) ? time : 3000)
         this.msgElem.innerText = message;
     }
     downloadStartState() {
@@ -908,7 +934,7 @@ class EmulatorJS {
             this.textElem.innerText = this.localization("Download Game Data");
 
             const gotGameData = (data) => {
-                if (['arcade', 'mame2003'].includes(this.getCore(true))) {
+                if (['arcade', 'mame'].includes(this.getCore(true))) {
                     this.fileName = this.getBaseFileName(true);
                     FS.writeFile(this.fileName, new Uint8Array(data));
                     resolve();
@@ -918,7 +944,7 @@ class EmulatorJS {
                 const altName = this.getBaseFileName(true);
 
                 let disableCue = false;
-                if (['pcsx_rearmed', 'genesis_plus_gx', 'picodrive', 'mednafen_pce', 'vice_x64'].includes(this.getCore()) && this.config.disableCue === undefined) {
+                if (['pcsx_rearmed', 'genesis_plus_gx', 'picodrive', 'mednafen_pce', 'vice_x64', 'vice_x64sc', 'vice_x128', 'vice_xvic', 'vice_xplus4', 'vice_xpet'].includes(this.getCore()) && this.config.disableCue === undefined) {
                     disableCue = true;
                 } else {
                     disableCue = this.config.disableCue;
@@ -1038,6 +1064,7 @@ class EmulatorJS {
     downloadFiles() {
         (async () => {
             this.gameManager = new window.EJS_GameManager(this.Module, this);
+            await this.gameManager.loadExternalFiles();
             if (this.getCore() === "ppsspp") {
                 await this.gameManager.loadPpssppAssets();
             }
@@ -1179,7 +1206,12 @@ class EmulatorJS {
         this.elements.statePopupPanel.style["font-size"] = "28px";
         
         //to fix a funny apple bug
-        this.addEventListener(window, "webkitfullscreenchange mozfullscreenchange fullscreenchange MSFullscreenChange", () => {setTimeout(this.handleResize.bind(this), 0)});
+        this.addEventListener(window, "webkitfullscreenchange mozfullscreenchange fullscreenchange MSFullscreenChange", () => {
+            setTimeout(() => {
+                this.handleResize.bind(this);
+                this.elements.parent.focus();
+            }, 0);
+        });
         this.addEventListener(this.elements.parent, "dragenter", (e) => {
             e.preventDefault();
             if (!this.started) return;
@@ -1295,15 +1327,16 @@ class EmulatorJS {
         let screenshotUrl;
         const screenshot = addButton("Take Screenshot", false, () => {
             if (screenshotUrl) URL.revokeObjectURL(screenshotUrl);
-            const screenshot = this.gameManager.screenshot();
-            const blob = new Blob([screenshot]);
-            screenshotUrl = URL.createObjectURL(blob);
-            const a = this.createElement("a");
-            a.href = screenshotUrl;
-            const date = new Date();
-            a.download = this.getBaseFileName()+"-"+date.getMonth()+"-"+date.getDate()+"-"+date.getFullYear()+".png";
-            a.click();
-            hideMenu();
+            this.gameManager.screenshot().then(screenshot => {
+                const blob = new Blob([screenshot]);
+                screenshotUrl = URL.createObjectURL(blob);
+                const a = this.createElement("a");
+                a.href = screenshotUrl;
+                const date = new Date();
+                a.download = this.getBaseFileName()+"-"+date.getMonth()+"-"+date.getDate()+"-"+date.getFullYear()+".png";
+                a.click();
+                hideMenu();
+            });
         });
 
         let screenMediaRecorder = null;
@@ -1473,6 +1506,10 @@ class EmulatorJS {
         popup.appendChild(title);
         popup.appendChild(main);
         
+        const padding = this.createElement("div");
+        padding.style["padding-top"] = "10px";
+        popup.appendChild(padding);
+        
         for (let k in buttons) {
             const button = this.createElement("a");
             if (buttons[k] instanceof Function) {
@@ -1618,8 +1655,6 @@ class EmulatorJS {
             return both ? [button, svg, text] : button;
         }
         
-        //todo. Center text on not restart button
-        
         const restartButton = addButton("Restart", '<svg viewBox="0 0 512 512"><path d="M496 48V192c0 17.69-14.31 32-32 32H320c-17.69 0-32-14.31-32-32s14.31-32 32-32h63.39c-29.97-39.7-77.25-63.78-127.6-63.78C167.7 96.22 96 167.9 96 256s71.69 159.8 159.8 159.8c34.88 0 68.03-11.03 95.88-31.94c14.22-10.53 34.22-7.75 44.81 6.375c10.59 14.16 7.75 34.22-6.375 44.81c-39.03 29.28-85.36 44.86-134.2 44.86C132.5 479.9 32 379.4 32 256s100.5-223.9 223.9-223.9c69.15 0 134 32.47 176.1 86.12V48c0-17.69 14.31-32 32-32S496 30.31 496 48z"/></svg>', () => {
             if (this.isNetplay && this.netplay.owner) {
                 this.gameManager.saveSaveFiles();
@@ -1680,9 +1715,9 @@ class EmulatorJS {
         
         let stateUrl;
         const saveState = addButton("Save State", '<svg viewBox="0 0 448 512"><path fill="currentColor" d="M433.941 129.941l-83.882-83.882A48 48 0 0 0 316.118 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V163.882a48 48 0 0 0-14.059-33.941zM224 416c-35.346 0-64-28.654-64-64 0-35.346 28.654-64 64-64s64 28.654 64 64c0 35.346-28.654 64-64 64zm96-304.52V212c0 6.627-5.373 12-12 12H76c-6.627 0-12-5.373-12-12V108c0-6.627 5.373-12 12-12h228.52c3.183 0 6.235 1.264 8.485 3.515l3.48 3.48A11.996 11.996 0 0 1 320 111.48z"/></svg>', async () => {
-            const state = await this.gameManager.getState();
+            const state = this.gameManager.getState();
             const called = this.callEvent("save", {
-                screenshot: this.gameManager.screenshot(),
+                screenshot: await this.gameManager.screenshot(),
                 state: state
             });
             if (called > 0) return;
@@ -1723,6 +1758,7 @@ class EmulatorJS {
         const cache = addButton("Cache Manager", '<svg viewBox="0 0 1800 1800"><path d="M896 768q237 0 443-43t325-127v170q0 69-103 128t-280 93.5-385 34.5-385-34.5T231 896 128 768V598q119 84 325 127t443 43zm0 768q237 0 443-43t325-127v170q0 69-103 128t-280 93.5-385 34.5-385-34.5-280-93.5-103-128v-170q119 84 325 127t443 43zm0-384q237 0 443-43t325-127v170q0 69-103 128t-280 93.5-385 34.5-385-34.5-280-93.5-103-128V982q119 84 325 127t443 43zM896 0q208 0 385 34.5t280 93.5 103 128v128q0 69-103 128t-280 93.5T896 640t-385-34.5T231 512 128 384V256q0-69 103-128t280-93.5T896 0z"/></svg>', () => {
             this.openCacheMenu();
         });
+        if (this.config.disableDatabases) cache.style.display = "none";
         
         let savUrl;
         
@@ -2063,7 +2099,7 @@ class EmulatorJS {
         body.classList.add("ejs_control_body");
         
         let buttons;
-        if (['nes', 'gb'].includes(this.getControlScheme())) {
+        if ("gb" === this.getControlScheme()) {
             buttons = [
                 {id: 8, label: this.localization('A')},
                 {id: 0, label: this.localization('B')},
@@ -2073,6 +2109,19 @@ class EmulatorJS {
                 {id: 5, label: this.localization('DOWN')},
                 {id: 6, label: this.localization('LEFT')},
                 {id: 7, label: this.localization('RIGHT')},
+            ];
+        } else if ("nes" === this.getControlScheme()) {
+            buttons = [
+                {id: 8, label: this.localization('A')},
+                {id: 0, label: this.localization('B')},
+                {id: 2, label: this.localization('SELECT')},
+                {id: 3, label: this.localization('START')},
+                {id: 4, label: this.localization('UP')},
+                {id: 5, label: this.localization('DOWN')},
+                {id: 6, label: this.localization('LEFT')},
+                {id: 7, label: this.localization('RIGHT')},
+                {id: 10, label: this.localization('EJECT')},//Famicon games only
+                {id: 11, label: this.localization('SWAP DISKS')},
             ];
         } else if ('snes' === this.getControlScheme()) {
             buttons = [
@@ -2388,6 +2437,23 @@ class EmulatorJS {
             {id: 29, label: this.localization('SLOW MOTION')},
             {id: 28, label: this.localization('REWIND')}
         );
+        let nums = [];
+        for (let i=0; i<buttons.length; i++) {
+            nums.push(buttons[i].id);
+        }
+        for (let i=0; i<30; i++) {
+            if (!nums.includes(i)) {
+                delete this.defaultControllers[0][i];
+                delete this.defaultControllers[1][i];
+                delete this.defaultControllers[2][i];
+                delete this.defaultControllers[3][i];
+                delete this.controls[0][i];
+                delete this.controls[1][i];
+                delete this.controls[2][i];
+                delete this.controls[3][i];
+            }
+        }
+
         //if (_this.statesSupported === false) {
         //    delete buttons[24];
         //    delete buttons[25];
@@ -2867,25 +2933,27 @@ class EmulatorJS {
         222: 'single quote'
     }
     controls;
-    setupKeys(){
+    setupKeys() {
         for (let i=0; i<4; i++) {
             for (let j=0; j<30; j++) {
-                if (this.controls[i][j] && this.keyMap) {
-                    this.controls[i][j].value = Number(this.keyLookup(this.controls[i][j]));
-                    if(this.controls[i][j].value === -1){
-                        console.warn("Invalid key for control "+j+" player "+i+" with value "+this.keyMap[this.keyLookup(this.defaultControllers[i][j])]);
+                if (this.controls[i][j]) {
+                    this.controls[i][j].value = parseInt(this.keyLookup(this.controls[i][j].value));
+                    if (this.controls[i][j].value === -1 && this.debug) {
+                        delete this.controls[i][j].value;
+                        console.warn("Invalid key for control "+j+" player "+i);
                     }
                 }
             }
         }
     }
-    keyLookup(controllerkey){
-        for (var key in this.keyMap) {
-            if (this.keyMap[key] === controllerkey.value || key === controllerkey.value) {
-                return key;
-            } else if (controllerkey.value === undefined) {
-                return 0;
-            }
+    keyLookup(controllerkey) {
+        if (controllerkey === undefined) return 0;
+        if (typeof controllerkey === "number") return controllerkey;
+        controllerkey = controllerkey.toString().toLowerCase()
+        const values = Object.values(this.keyMap);
+        if (values.includes(controllerkey)) {
+            const index = values.indexOf(controllerkey);
+            return Object.keys(this.keyMap)[index];
         }
         return -1;
     }
@@ -3676,7 +3744,7 @@ class EmulatorJS {
         };
     }
     saveSettings() {
-        if (!window.localStorage || !this.settingsLoaded) return;
+        if (!window.localStorage || this.config.disableLocalStorage || !this.settingsLoaded) return;
         const coreSpecific = {
             controlSettings: this.controls,
             settings: this.settings,
@@ -3690,7 +3758,12 @@ class EmulatorJS {
         localStorage.setItem("ejs-"+this.getCore()+"-settings", JSON.stringify(coreSpecific));
     }
     loadRewindEnabled() {
-        if (!window.localStorage) return;
+        if (!window.localStorage || this.config.disableLocalStorage) {
+            if (this.config.defaultOptions && this.config.defaultOptions.rewindEnabled) {
+                return this.config.defaultOptions.rewindEnabled === 'enabled';
+            }
+            return false;
+        }
         let coreSpecific = localStorage.getItem("ejs-"+this.getCore()+"-settings");
         try {
            coreSpecific = JSON.parse(coreSpecific);
@@ -3704,7 +3777,7 @@ class EmulatorJS {
         }
     }
     loadSettings() {
-        if (!window.localStorage) return;
+        if (!window.localStorage || this.config.disableLocalStorage) return;
         this.settingsLoaded = true;
         let ejs_settings = localStorage.getItem("ejs-settings");
         let coreSpecific = localStorage.getItem("ejs-"+this.getCore()+"-settings");
@@ -3825,17 +3898,19 @@ class EmulatorJS {
                 this.settingsMenu.style.display = "";
                 needChange = true;
             }
-            const x = this.settingsMenu.parentElement.getBoundingClientRect().x;
             let height = this.elements.parent.getBoundingClientRect().height;
-            let width = this.elements.parent.getBoundingClientRect().width;
+            let w2 = this.settingParent.parentElement.getBoundingClientRect().width;
+            let settingsX = this.settingParent.getBoundingClientRect().x;
+            if (w2 > window.innerWidth) settingsX += (w2 - window.innerWidth);
+            const onTheRight = settingsX > (w2-15)/2;
             if (height > 375) height = 375;
             home.style['max-height'] = (height - 95) + "px";
             nested.style['max-height'] = (height - 95) + "px";
             for (let i=0; i<menus.length; i++) {
                 menus[i].style['max-height'] = (height - 95) + "px";
             }
-            this.settingsMenu.classList.toggle("ejs_settings_center_left", (x < width/2) && (width < 575));
-            this.settingsMenu.classList.toggle("ejs_settings_center_right", (x >= width/2) && (width < 575));
+            this.settingsMenu.classList.toggle("ejs_settings_center_left", !onTheRight);
+            this.settingsMenu.classList.toggle("ejs_settings_center_right", onTheRight);
             if (needChange) {
                 this.settingsMenu.style.display = "none";
                 this.settingsMenu.style.opacity = "";
@@ -4523,7 +4598,7 @@ class EmulatorJS {
             syncing = true;
             if (this.debug) console.log("sync")
             this.netplay.ready = 0;
-            const state = await this.gameManager.getState();
+            const state = this.gameManager.getState();
             this.netplay.sendMessage({
                 state: state
             });

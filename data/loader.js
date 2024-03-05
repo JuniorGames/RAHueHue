@@ -108,6 +108,9 @@
     config.startBtnName = window.EJS_startButtonName;
     config.softLoad = window.EJS_softLoad;
     config.screenRecording = window.EJS_screenRecording;
+    config.externalFiles = window.EJS_externalFiles;
+    config.disableDatabases = window.EJS_disableDatabases;
+    config.disableLocalStorage = window.EJS_disableLocalStorage;
     
     if (typeof window.EJS_language === "string" && window.EJS_language !== "en-US") {
         try {
