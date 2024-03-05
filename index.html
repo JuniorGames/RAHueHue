@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>RetroHueHue JS</title>
+        <title>EmulatorJS Demo</title>
         <link rel = icon href = docs/favicon.ico sizes = "16x16 32x32 48x48 64x64" type = image/vnd.microsoft.icon>
         <meta name = viewport content = "width = device-width, initial-scale = 1">
         <style>
@@ -97,15 +97,27 @@
 
     <body>
         <div id="top">
-            <h1>RetroHueHue JS</h1>
+            <h1>EmulatorJS Demo</h1>
             <img src="docs/Logo-light.png" alt="Logo" class="logo">
         </div>
         <div id = box>
             <input type = file id = input>
-            Carregar as Roms
+            Drag ROM file or click here
         </div>
 
         <script>
+            var enableDebug = false;
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            if (urlParams.get('debug') == 1)
+                enableDebug = true;
+            
+            if (enableDebug == true) {
+                console.log("Debug is enabled");
+            } else {
+                console.log("Debug is disabled");
+            }
+            
             input.onchange = async () => {
                 const url = new Blob([input.files[0]])
                 const parts = input.files[0].name.split(".")
@@ -133,38 +145,50 @@
                         return "coleco"
 
                     if (["d64"].includes(ext))
-                        return "vice_x64"
+                        return "vice_x64sc"
 
                     if (["nds", "gba", "gb", "z64", "n64"].includes(ext))
                         return ext
 
                     return await new Promise(resolve => {
-                        const cores = {
-                            "Atari 2600": "atari2600",
-                            "Atari 7800": "atari7800",
-                            "Atari Lynx": "lynx",
-                            "Atari Jaguar": "jaguar",
-                            "Bandai WonderSwan (Color)": "ws",
-                            "ColecoVision": "coleco",
-                            "Commodore 64": "vice_x64",
-                            "NEC TurboGrafx-16/SuperGrafx/PC Engine": "pce",
-                            "NEC PC-FX": "pcfx",
+                        var coreValues = {
+                            "Nintendo 64": "n64",
                             "Nintendo Game Boy": "gb",
                             "Nintendo Game Boy Advance": "gba",
                             "Nintendo DS": "nds",
                             "Nintendo Entertainment System": "nes",
-                            "Nintendo 64": "n64",
-                            "Nintendo Virtual Boy": "vb",
                             "Super Nintendo Entertainment System": "snes",
+                            "PlayStation": "psx",
+                            "Virtual Boy": "vb",
                             "Sega Mega Drive": "segaMD",
                             "Sega Master System": "segaMS",
                             "Sega CD": "segaCD",
+                            "Atari Lynx": "lynx",
                             "Sega 32X": "sega32x",
+                            "Atari Jaguar": "jaguar",
                             "Sega Game Gear": "segaGG",
                             "Sega Saturn": "segaSaturn",
+                            "Atari 7800": "atari7800",
+                            "Atari 2600": "atari2600",
+                            "NEC TurboGrafx-16/SuperGrafx/PC Engine": "pce",
+                            "NEC PC-FX": "pcfx",
                             "SNK NeoGeo Pocket (Color)": "ngp",
-                            "PlayStation": "psx",
+                            "Bandai WonderSwan (Color)": "ws",
+                            "ColecoVision": "coleco",
+                            "Commodore 64": "vice_x64sc",
+                            "Commodore 128": "vice_x128",
+                            "Commodore VIC20": "vice_xvic",
+                            "Commodore Plus/4": "vice_xplus4",
+                            "Commodore PET": "vice_xpet"
                         }
+
+                        const cores = Object.keys(coreValues).sort().reduce(
+                            (obj, key) => { 
+                                obj[key] = coreValues[key]; 
+                                return obj;
+                            }, 
+                            {}
+                        );
 
                         const button = document.createElement("button")
                         const select = document.createElement("select")
@@ -178,7 +202,7 @@
                         }
 
                         button.onclick = () => resolve(select[select.selectedIndex].value)
-                        button.textContent = "Jogar"
+                        button.textContent = "Load game"
                         box.innerHTML = ""
 
                         box.appendChild(select)
@@ -206,6 +230,8 @@
                 window.EJS_core = core;
                 window.EJS_pathtodata = "data/";
                 window.EJS_startOnLoaded = true;
+                window.EJS_DEBUG_XX = enableDebug;
+                window.EJS_disableDatabases = true;
 
                 script.src = "data/loader.js";
                 document.body.appendChild(script);
