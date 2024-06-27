@@ -1,5 +1,5 @@
 class EmulatorJS {
-    version = 12; //Increase by 1 when cores are updated
+    version = 13; //Increase by 1 when cores are updated
     getCore(generic) {
         const core = this.config.system;
         /*todo:
@@ -60,7 +60,7 @@ class EmulatorJS {
             'jaguar': 'virtualjaguar',
             'lynx': 'handy',
             'segaSaturn': 'yabause',
-            'segaMS': 'genesis_plus_gx',
+            'segaMS': 'smsplus',
             'segaMD': 'genesis_plus_gx',
             'segaGG': 'genesis_plus_gx',
             'segaCD': 'genesis_plus_gx',
@@ -132,6 +132,8 @@ class EmulatorJS {
         'picodrive': ['bin', 'gen', 'smd', 'md', '32x', 'cue', 'iso', 'sms', '68k', 'chd'],
         'ppsspp': ['elf', 'iso', 'cso', 'prx', 'pbp'],
         'prosystem': ['a78', 'bin'],
+        'puae': ['adf', 'adz', 'dms', 'fdi', 'ipf', 'raw', 'hdf', 'hdz', 'lha', 'slave', 'info', 'cue', 'ccd', 'chd', 'nrg', 'mds', 'iso', 'uae', 'm3u', 'zip', '7z'],
+        'smsplus': ['m3u', 'mdx', 'md', 'smd', 'gen', 'bin', 'cue', 'iso', 'chd', 'bms', 'sms', 'gg', 'sg', '68k', 'sgd'],
         'snes9x': ['smc', 'sfc', 'swc', 'fig', 'bs', 'st'],
         'stella2014': ['a26', 'bin', 'zip'],
         'vice_x64': ['d64', 'd6z', 'd71', 'd7z', 'd80', 'd81', 'd82', 'd8z', 'g64', 'g6z', 'g41', 'g4z', 'x64', 'x6z', 'nib', 'nbz', 'd2m', 'd4m', 't64', 'tap', 'tcrt', 'prg', 'p00', 'crt', 'bin', 'cmd', 'm3u', 'vfl', 'vsf', 'zip', '7z', 'gz', '20', '40', '60', 'a0', 'b0', 'rom'],
@@ -267,8 +269,8 @@ class EmulatorJS {
         })
     }
     constructor(element, config) {
-        this.ejs_version = "4.0.11";
-        this.ejs_num_version = 401.1;
+        this.ejs_version = "4.0.12";
+        this.ejs_num_version = 401.2;
         this.debug = (window.EJS_DEBUG_XX === true);
         if (this.debug || (window.location && ['localhost', '127.0.0.1'].includes(location.hostname))) this.checkForUpdates();
         this.netplayEnabled = (window.EJS_DEBUG_XX === true) && (window.EJS_EXPERIMENTAL_NETPLAY === true);
@@ -295,17 +297,17 @@ class EmulatorJS {
             this.config.adSize = (Array.isArray(this.config.adSize)) ? this.config.adSize : ["300px", "250px"];
             this.setupAds(this.config.adUrl, this.config.adSize[0], this.config.adSize[1]);
         }
-        this.canvas = this.createElement('canvas');
-        this.canvas.classList.add('ejs_canvas');
-        this.bindListeners();
-        this.config.netplayUrl = this.config.netplayUrl || "https://netplay.emulatorjs.org";
-        this.fullscreen = false;
-        this.supportsWebgl2 = !!document.createElement('canvas').getContext('webgl2');
         this.isMobile = (function() {
             let check = false;
             (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))) check = true;})(navigator.userAgent||navigator.vendor||window.opera);
             return check;
         })();
+        this.canvas = this.createElement('canvas');
+        this.canvas.classList.add('ejs_canvas');
+        this.bindListeners();
+        this.config.netplayUrl = this.config.netplayUrl || "https://netplay.emulatorjs.org";
+        this.fullscreen = false;
+        this.supportsWebgl2 = !!document.createElement('canvas').getContext('webgl2') && (this.config.forceLegacyCores !== true);
         this.isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         if (this.config.disableDatabases) {
             this.storage = {
@@ -722,6 +724,7 @@ class EmulatorJS {
             const name = this.config.gameName.replace(invalidCharacters, "").trim();
             if (name) return name;
         }
+        if (!this.fileName) return "game";
         let parts = this.fileName.split(".");
         parts.splice(parts.length-1, 1);
         return parts.join(".");
@@ -944,7 +947,7 @@ class EmulatorJS {
                 const altName = this.getBaseFileName(true);
 
                 let disableCue = false;
-                if (['pcsx_rearmed', 'genesis_plus_gx', 'picodrive', 'mednafen_pce', 'vice_x64', 'vice_x64sc', 'vice_x128', 'vice_xvic', 'vice_xplus4', 'vice_xpet'].includes(this.getCore()) && this.config.disableCue === undefined) {
+                if (['pcsx_rearmed', 'genesis_plus_gx', 'picodrive', 'mednafen_pce', 'smsplus', 'vice_x64', 'vice_x64sc', 'vice_x128', 'vice_xvic', 'vice_xplus4', 'vice_xpet'].includes(this.getCore()) && this.config.disableCue === undefined) {
                     disableCue = true;
                 } else {
                     disableCue = this.config.disableCue;
@@ -1121,12 +1124,17 @@ class EmulatorJS {
             }
             this.Module.resumeMainLoop();
             this.checkSupportedOpts();
+            this.setupDisksMenu();
+            // hide the disks menu if the disk count is not greater than 1
+            if (!(this.gameManager.getDiskCount() > 1)) {
+                this.diskParent.style.display = 'none';
+            }
             this.setupSettingsMenu();
             this.loadSettings();
             this.updateCheatUI();
             this.updateGamepadLabels();
             if (!this.muted) this.setVolume(this.volume);
-            this.elements.parent.focus();
+            if (this.config.noAutoFocus !== true) this.elements.parent.focus();
             this.textElem.remove();
             this.textElem = null;
             this.game.classList.remove("ejs_game");
@@ -1194,7 +1202,7 @@ class EmulatorJS {
         this.setVirtualGamepad();
         this.addEventListener(this.elements.parent, "keydown keyup", this.keyChange.bind(this));
         this.addEventListener(this.elements.parent, "mousedown touchstart", (e) => {
-            if (document.activeElement !== this.elements.parent) this.elements.parent.focus();
+            if (document.activeElement !== this.elements.parent && this.config.noAutoFocus !== true) this.elements.parent.focus();
         })
         this.addEventListener(window, "resize", this.handleResize.bind(this));
         //this.addEventListener(window, "blur", e => console.log(e), true); //TODO - add "click to make keyboard keys work" message?
@@ -1209,7 +1217,7 @@ class EmulatorJS {
         this.addEventListener(window, "webkitfullscreenchange mozfullscreenchange fullscreenchange MSFullscreenChange", () => {
             setTimeout(() => {
                 this.handleResize.bind(this);
-                this.elements.parent.focus();
+                if (this.config.noAutoFocus !== true) this.elements.parent.focus();
             }, 0);
         });
         this.addEventListener(this.elements.parent, "dragenter", (e) => {
@@ -1291,12 +1299,15 @@ class EmulatorJS {
         this.elements.contextmenu = this.createElement('div');
         this.elements.contextmenu.classList.add("ejs_context_menu");
         this.addEventListener(this.game, 'contextmenu', (e) => {
-            if (this.started) {
-                this.elements.contextmenu.style.display = "block";
-                this.elements.contextmenu.style.left = e.offsetX+"px";
-                this.elements.contextmenu.style.top = e.offsetY+"px";
-            }
             e.preventDefault();
+            if ((this.config.buttonOpts && this.config.buttonOpts.rightClick === false) || !this.started) return;
+            const parentRect = this.elements.parent.getBoundingClientRect();
+            this.elements.contextmenu.style.display = "block";
+            const rect = this.elements.contextmenu.getBoundingClientRect();
+            const up = e.offsetY + rect.height > parentRect.bottom - 25;
+            const left = e.offsetX + rect.width > parentRect.right - 5;
+            this.elements.contextmenu.style.left = (e.offsetX - (left ? rect.width : 0)) + "px";
+            this.elements.contextmenu.style.top = (e.offsetY - (up ? rect.height : 0)) + "px";
         })
         const hideMenu = () => {
             this.elements.contextmenu.style.display = "none";
@@ -1569,7 +1580,7 @@ class EmulatorJS {
         let timeout = null;
         let ignoreEvents = false;
         const hide = () => {
-            if (this.paused || this.settingsMenuOpen) return;
+            if (this.paused || this.settingsMenuOpen || this.disksMenuOpen) return;
             this.elements.menu.classList.add("ejs_menu_bar_hidden");
         }
         
@@ -1716,7 +1727,7 @@ class EmulatorJS {
         let stateUrl;
         const saveState = addButton("Save State", '<svg viewBox="0 0 448 512"><path fill="currentColor" d="M433.941 129.941l-83.882-83.882A48 48 0 0 0 316.118 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V163.882a48 48 0 0 0-14.059-33.941zM224 416c-35.346 0-64-28.654-64-64 0-35.346 28.654-64 64-64s64 28.654 64 64c0 35.346-28.654 64-64 64zm96-304.52V212c0 6.627-5.373 12-12 12H76c-6.627 0-12-5.373-12-12V108c0-6.627 5.373-12 12-12h228.52c3.183 0 6.235 1.264 8.485 3.515l3.48 3.48A11.996 11.996 0 0 1 320 111.48z"/></svg>', async () => {
             const state = this.gameManager.getState();
-            const called = this.callEvent("save", {
+            const called = this.callEvent("saveState", {
                 screenshot: await this.gameManager.screenshot(),
                 state: state
             });
@@ -1735,7 +1746,7 @@ class EmulatorJS {
             }
         });
         const loadState = addButton("Load State", '<svg viewBox="0 0 576 512"><path fill="currentColor" d="M572.694 292.093L500.27 416.248A63.997 63.997 0 0 1 444.989 448H45.025c-18.523 0-30.064-20.093-20.731-36.093l72.424-124.155A64 64 0 0 1 152 256h399.964c18.523 0 30.064 20.093 20.73 36.093zM152 224h328v-48c0-26.51-21.49-48-48-48H272l-64-64H48C21.49 64 0 85.49 0 112v278.046l69.077-118.418C86.214 242.25 117.989 224 152 224z"/></svg>', async () => {
-            const called = this.callEvent("load");
+            const called = this.callEvent("loadState");
             if (called > 0) return;
             if (this.settings['save-state-location'] === "browser" && this.saveInBrowserSupported()) {
                 this.storage.states.get(this.getBaseFileName()+".state").then(e => {
@@ -1764,6 +1775,11 @@ class EmulatorJS {
         
         const saveSavFiles = addButton("Export Save File", '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 23 23"><path d="M3 6.5V5C3 3.89543 3.89543 3 5 3H16.1716C16.702 3 17.2107 3.21071 17.5858 3.58579L20.4142 6.41421C20.7893 6.78929 21 7.29799 21 7.82843V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V17.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="transparent"></path><path d="M8 3H16V8.4C16 8.73137 15.7314 9 15.4 9H8.6C8.26863 9 8 8.73137 8 8.4V3Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="transparent"></path><path d="M18 21V13.6C18 13.2686 17.7314 13 17.4 13H15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="transparent"></path><path d="M6 21V17.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="transparent"></path><path d="M12 12H1M1 12L4 9M1 12L4 15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg>', async () => {
             const file = await this.gameManager.getSaveFile();
+            const called = this.callEvent("saveSave", {
+                screenshot: await this.gameManager.screenshot(),
+                save: file
+            });
+            if (called > 0) return;
             const blob = new Blob([file]);
             savUrl = URL.createObjectURL(blob);
             const a = this.createElement("a");
@@ -1772,6 +1788,8 @@ class EmulatorJS {
             a.click();
         });
         const loadSavFiles = addButton("Import Save File", '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 23 23"><path d="M3 7.5V5C3 3.89543 3.89543 3 5 3H16.1716C16.702 3 17.2107 3.21071 17.5858 3.58579L20.4142 6.41421C20.7893 6.78929 21 7.29799 21 7.82843V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V16.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="transparent"></path><path d="M6 21V17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M18 21V13.6C18 13.2686 17.7314 13 17.4 13H15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="transparent"></path><path d="M16 3V8.4C16 8.73137 15.7314 9 15.4 9H13.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="transparent"></path><path d="M8 3V6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M1 12H12M12 12L9 9M12 12L9 15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg>', async () => {
+            const called = this.callEvent("loadSave");
+            if (called > 0) return;
             const file = await this.selectFile();
             const sav = new Uint8Array(await file.arrayBuffer());
             const path = this.gameManager.getSaveFilePath();
@@ -1867,6 +1885,30 @@ class EmulatorJS {
             }
         });
         
+        this.diskParent = this.createElement("div");
+        this.diskParent.id = "ejs_disksMenu";
+        this.disksMenuOpen = false;
+        const diskButton = addButton("Disks", '<svg fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 473.109 473.109"><path d="M340.963,101.878H12.105C5.423,101.878,0,107.301,0,113.983v328.862c0,6.68,5.423,12.105,12.105,12.105h328.857 c6.685,0,12.104-5.426,12.104-12.105V113.983C353.067,107.301,347.647,101.878,340.963,101.878z M67.584,120.042h217.895v101.884 H67.584V120.042z M296.076,429.228H56.998V278.414h239.079V429.228z M223.947,135.173h30.269v72.638h-30.269V135.173z M274.13,315.741H78.933v-12.105H274.13V315.741z M274.13,358.109H78.933v-12.105H274.13V358.109z M274.13,398.965H78.933v-12.105 H274.13V398.965z M473.109,30.263v328.863c0,6.68-5.426,12.105-12.105,12.105H384.59v-25.724h31.528V194.694H384.59v-56.489h20.93 V36.321H187.625v43.361h-67.583v-49.42c0-6.682,5.423-12.105,12.105-12.105H461.01C467.695,18.158,473.109,23.581,473.109,30.263z M343.989,51.453h30.269v31.321c-3.18-1.918-6.868-3.092-10.853-3.092h-19.416V51.453z M394.177,232.021h-9.581v-12.105h9.581 V232.021z M384.59,262.284h9.581v12.105h-9.581V262.284z M384.59,303.14h9.581v12.104h-9.581V303.14z"/></svg>', () => {
+            this.disksMenuOpen = !this.disksMenuOpen;
+            diskButton[1].classList.toggle("ejs_svg_rotate", this.disksMenuOpen);
+            this.disksMenu.style.display = this.disksMenuOpen ? "" : "none";
+            diskButton[2].classList.toggle("ejs_disks_text", this.disksMenuOpen);
+        }, this.diskParent, true);
+        this.elements.menu.appendChild(this.diskParent);
+        this.closeDisksMenu = () => {
+            if (!this.disksMenu) return;
+            this.disksMenuOpen = false;
+            diskButton[1].classList.toggle("ejs_svg_rotate", this.disksMenuOpen);
+            diskButton[2].classList.toggle("ejs_disks_text", this.disksMenuOpen);
+            this.disksMenu.style.display = "none";
+        }
+        this.addEventListener(this.elements.parent, "mousedown touchstart", (e) => {
+            if (this.isChild(this.disksMenu, e.target)) return;
+            if (e.pointerType === "touch") return;
+            if (e.target === diskButton[0] || e.target === diskButton[2]) return;
+            this.closeDisksMenu();
+        })
+
         this.settingParent = this.createElement("div");
         this.settingsMenuOpen = false;
         const settingButton = addButton("Settings", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M495.9 166.6C499.2 175.2 496.4 184.9 489.6 191.2L446.3 230.6C447.4 238.9 448 247.4 448 256C448 264.6 447.4 273.1 446.3 281.4L489.6 320.8C496.4 327.1 499.2 336.8 495.9 345.4C491.5 357.3 486.2 368.8 480.2 379.7L475.5 387.8C468.9 398.8 461.5 409.2 453.4 419.1C447.4 426.2 437.7 428.7 428.9 425.9L373.2 408.1C359.8 418.4 344.1 427 329.2 433.6L316.7 490.7C314.7 499.7 307.7 506.1 298.5 508.5C284.7 510.8 270.5 512 255.1 512C241.5 512 227.3 510.8 213.5 508.5C204.3 506.1 197.3 499.7 195.3 490.7L182.8 433.6C167 427 152.2 418.4 138.8 408.1L83.14 425.9C74.3 428.7 64.55 426.2 58.63 419.1C50.52 409.2 43.12 398.8 36.52 387.8L31.84 379.7C25.77 368.8 20.49 357.3 16.06 345.4C12.82 336.8 15.55 327.1 22.41 320.8L65.67 281.4C64.57 273.1 64 264.6 64 256C64 247.4 64.57 238.9 65.67 230.6L22.41 191.2C15.55 184.9 12.82 175.3 16.06 166.6C20.49 154.7 25.78 143.2 31.84 132.3L36.51 124.2C43.12 113.2 50.52 102.8 58.63 92.95C64.55 85.8 74.3 83.32 83.14 86.14L138.8 103.9C152.2 93.56 167 84.96 182.8 78.43L195.3 21.33C197.3 12.25 204.3 5.04 213.5 3.51C227.3 1.201 241.5 0 256 0C270.5 0 284.7 1.201 298.5 3.51C307.7 5.04 314.7 12.25 316.7 21.33L329.2 78.43C344.1 84.96 359.8 93.56 373.2 103.9L428.9 86.14C437.7 83.32 447.4 85.8 453.4 92.95C461.5 102.8 468.9 113.2 475.5 124.2L480.2 132.3C486.2 143.2 491.5 154.7 495.9 166.6V166.6zM256 336C300.2 336 336 300.2 336 255.1C336 211.8 300.2 175.1 256 175.1C211.8 175.1 176 211.8 176 255.1C176 300.2 211.8 336 256 336z"/></svg>', () => {
@@ -1889,6 +1931,7 @@ class EmulatorJS {
             if (e.target === settingButton[0] || e.target === settingButton[2]) return;
             this.closeSettingsMenu();
         })
+
         this.addEventListener(this.canvas, "click", (e) => {
             if (e.pointerType === "touch") return;
             if (this.getCore(true) === "nds" && !this.paused) {
@@ -1990,7 +2033,7 @@ class EmulatorJS {
                 pauseButton.style.display = "none";
                 playButton.style.display = "none";
             }
-            if (this.config.buttonOpts.contextMenuButton === false) contextMenuButton.style.display = "none"
+            if (this.config.buttonOpts.contextMenuButton === false && this.config.buttonOpts.rightClick !== false && this.isMobile === false) contextMenuButton.style.display = "none"
             if (this.config.buttonOpts.restart === false) restartButton.style.display = "none"
             if (this.config.buttonOpts.settings === false) settingButton[0].style.display = "none"
             if (this.config.buttonOpts.fullscreen === false) {
@@ -3071,11 +3114,11 @@ class EmulatorJS {
         this.elements.parent.appendChild(this.virtualGamepad);
 
         const speedControlButtons = [
-            {"type":"button","text":"Fast","id":"speed-fast","location":"center","left":-35,"top":50,"fontSize":15,"block":true,"input_value":27},
-            {"type":"button","text":"Slow","id":"speed-slow","location":"center","left":95,"top":50,"fontSize":15,"block":true,"input_value":29},
+            {"type":"button","text":"Fast","id":"speed_fast","location":"center","left":-35,"top":50,"fontSize":15,"block":true,"input_value":27},
+            {"type":"button","text":"Slow","id":"speed_slow","location":"center","left":95,"top":50,"fontSize":15,"block":true,"input_value":29},
         ];
         if (this.rewindEnabled) {
-            speedControlButtons.push({"type":"button","text":"Rewind","id":"speed-rewind","location":"center","left":30,"top":50,"fontSize":15,"block":true,"input_value":28});
+            speedControlButtons.push({"type":"button","text":"Rewind","id":"speed_rewind","location":"center","left":30,"top":50,"fontSize":15,"block":true,"input_value":28});
         }
 
         let info;
@@ -3126,7 +3169,7 @@ class EmulatorJS {
             info = [
                 {"type":"button","text":"B","id":"b","location":"right","left":10,"top":70,"bold":true,"input_value":0},
                 {"type":"button","text":"A","id":"a","location":"right","left":81,"top":40,"bold":true,"input_value":8},
-                {"type":"dpad","location":"left","left":"50%","top":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"dpad","id":"dpad","location":"left","left":"50%","top":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
                 {"type":"button","text":"Start","id":"start","location":"center","left":60,"fontSize":15,"block":true,"input_value":3},
                 {"type":"button","text":"Select","id":"select","location":"center","left":-5,"fontSize":15,"block":true,"input_value":2},
                 {"type":"button","text":"L","id":"l","location":"left","left":3,"top":-90,"bold":true,"block":true,"input_value":10},
@@ -3137,7 +3180,7 @@ class EmulatorJS {
             info = [
                 {"type":"button","text":"A","id":"a","location":"right","left":81,"top":40,"bold":true,"input_value":8},
                 {"type":"button","text":"B","id":"b","location":"right","left":10,"top":70,"bold":true,"input_value":0},
-                {"type":"dpad","location":"left","left":"50%","top":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"dpad","id":"dpad","location":"left","left":"50%","top":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
                 {"type":"button","text":"Start","id":"start","location":"center","left":60,"fontSize":15,"block":true,"input_value":3},
                 {"type":"button","text":"Select","id":"select","location":"center","left":-5,"fontSize":15,"block":true,"input_value":2}
             ];
@@ -3146,7 +3189,7 @@ class EmulatorJS {
             info = [
                 {"type":"button","text":"B","id":"b","location":"right","right":75,"top":70,"bold":true,"input_value":0},
                 {"type":"button","text":"A","id":"a","location":"right","right":5,"top":70,"bold":true,"input_value":8},
-                {"type":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"dpad","id":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
                 {"type":"button","text":"Start","id":"start","location":"center","left":60,"fontSize":15,"block":true,"input_value":3},
                 {"type":"button","text":"Select","id":"select","location":"center","left":-5,"fontSize":15,"block":true,"input_value":2}
             ];
@@ -3155,8 +3198,8 @@ class EmulatorJS {
             info = [
                 {"type":"button","text":"B","id":"b","location":"right","left":-10,"top":95,"input_value":1,"bold":true},
                 {"type":"button","text":"A","id":"a","location":"right","left":40,"top":150,"input_value":0,"bold":true},
-                {"type":"zone","location":"left","left":"50%","top":"100%","joystickInput":true,"inputValues":[16, 17, 18, 19]},
-                {"type":"zone","location":"left","left":"50%","top":"0%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"zone","id":"stick","location":"left","left":"50%","top":"100%","joystickInput":true,"inputValues":[16, 17, 18, 19]},
+                {"type":"zone","id":"dpad","location":"left","left":"50%","top":"0%","joystickInput":false,"inputValues":[4,5,6,7]},
                 {"type":"button","text":"Start","id":"start","location":"center","left":30,"top":-10,"fontSize":15,"block":true,"input_value":3},
                 {"type":"button","text":"L","id":"l","block":true,"location":"top","left":10,"top":-40,"bold":true,"input_value":10},
                 {"type":"button","text":"R","id":"r","block":true,"location":"top","right":10,"top":-40,"bold":true,"input_value":11},
@@ -3173,7 +3216,7 @@ class EmulatorJS {
                 {"type":"button","text":"Y","id":"y","location":"right","top":40,"bold":true,"input_value":1},
                 {"type":"button","text":"A","id":"a","location":"right","left":81,"top":40,"bold":true,"input_value":8},
                 {"type":"button","text":"B","id":"b","location":"right","left":40,"top":80,"bold":true,"input_value":0},
-                {"type":"dpad","location":"left","left":"50%","top":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"dpad","id":"dpad","location":"left","left":"50%","top":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
                 {"type":"button","text":"Start","id":"start","location":"center","left":60,"fontSize":15,"block":true,"input_value":3},
                 {"type":"button","text":"Select","id":"select","location":"center","left":-5,"fontSize":15,"block":true,"input_value":2},
                 {"type":"button","text":"L","id":"l","location":"left","left":3,"top":-100,"bold":true,"block":true,"input_value":10},
@@ -3186,7 +3229,7 @@ class EmulatorJS {
                 {"type":"button","text":"Y","id":"y","location":"right","top":40,"bold":true,"input_value":1},
                 {"type":"button","text":"A","id":"a","location":"right","left":81,"top":40,"bold":true,"input_value":8},
                 {"type":"button","text":"B","id":"b","location":"right","left":40,"top":80,"bold":true,"input_value":0},
-                {"type":"dpad","location":"left","left":"50%","top":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"dpad","id":"dpad","location":"left","left":"50%","top":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
                 {"type":"button","text":"Start","id":"start","location":"center","left":60,"fontSize":15,"block":true,"input_value":3},
                 {"type":"button","text":"Select","id":"select","location":"center","left":-5,"fontSize":15,"block":true,"input_value":2},
                 {"type":"button","text":"L","id":"l","location":"left","left":3,"top":-100,"bold":true,"block":true,"input_value":10},
@@ -3201,23 +3244,23 @@ class EmulatorJS {
                 {"type":"button","text":"X","id":"x","location":"right","right":145,"top":0,"bold":true,"input_value":10},
                 {"type":"button","text":"Y","id":"y","location":"right","right":75,"top":0,"bold":true,"input_value":9},
                 {"type":"button","text":"Z","id":"z","location":"right","right":5,"top":0,"bold":true,"input_value":11},
-                {"type":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"dpad","id":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
                 {"type":"button","text":"Mode","id":"mode","location":"center","left":-5,"fontSize":15,"block":true,"input_value":2},
                 {"type":"button","text":"Start","id":"start","location":"center","left":60,"fontSize":15,"block":true,"input_value":3}
             ];
             info.push(...speedControlButtons);
         } else if ("segaMS" === this.getControlScheme()) {
             info = [
-                {"type":"button","text":"1","id":"button1","location":"right","left":10,"top":40,"bold":true,"input_value":0},
-                {"type":"button","text":"2","id":"button2","location":"right","left":81,"top":40,"bold":true,"input_value":8},
-                {"type":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]}
+                {"type":"button","text":"1","id":"button_1","location":"right","left":10,"top":40,"bold":true,"input_value":0},
+                {"type":"button","text":"2","id":"button_2","location":"right","left":81,"top":40,"bold":true,"input_value":8},
+                {"type":"dpad","id":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]}
             ];
             info.push(...speedControlButtons);
         } else if ("segaGG" === this.getControlScheme()) {
             info = [
-                {"type":"button","text":"1","id":"button1","location":"right","left":10,"top":70,"bold":true,"input_value":0},
-                {"type":"button","text":"2","id":"button2","location":"right","left":81,"top":40,"bold":true,"input_value":8},
-                {"type":"dpad","location":"left","left":"50%","top":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"button","text":"1","id":"button_1","location":"right","left":10,"top":70,"bold":true,"input_value":0},
+                {"type":"button","text":"2","id":"button_2","location":"right","left":81,"top":40,"bold":true,"input_value":8},
+                {"type":"dpad","id":"dpad","location":"left","left":"50%","top":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
                 {"type":"button","text":"Start","id":"start","location":"center","left":30,"fontSize":15,"block":true,"input_value":3}
             ];
             info.push(...speedControlButtons);
@@ -3229,7 +3272,7 @@ class EmulatorJS {
                 {"type":"button","text":"X","id":"x","location":"right","right":145,"top":0,"bold":true,"input_value":9},
                 {"type":"button","text":"Y","id":"y","location":"right","right":75,"top":0,"bold":true,"input_value":10},
                 {"type":"button","text":"Z","id":"z","location":"right","right":5,"top":0,"bold":true,"input_value":11},
-                {"type":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"dpad","id":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
                 {"type":"button","text":"L","id":"l","location":"left","left":3,"top":-90,"bold":true,"block":true,"input_value":12},
                 {"type":"button","text":"R","id":"r","location":"right","right":3,"top":-90,"bold":true,"block":true,"input_value":13},
                 {"type":"button","text":"Start","id":"start","location":"center","left":30,"fontSize":15,"block":true,"input_value":3}
@@ -3237,17 +3280,17 @@ class EmulatorJS {
             info.push(...speedControlButtons);
         } else if ("atari2600" === this.getControlScheme()) {
             info = [
-                {"type":"button","text":"","id":"button1","location":"right","right":10,"top":70,"bold":true,"input_value":0},
-                {"type":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"button","text":"","id":"button_1","location":"right","right":10,"top":70,"bold":true,"input_value":0},
+                {"type":"dpad","id":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
                 {"type":"button","text":"Reset","id":"reset","location":"center","left":60,"fontSize":15,"block":true,"input_value":3},
                 {"type":"button","text":"Select","id":"select","location":"center","left":-5,"fontSize":15,"block":true,"input_value":2}
             ];
             info.push(...speedControlButtons);
         } else if ("atari7800" === this.getControlScheme()) {
             info = [
-                {"type":"button","text":"1","id":"button1","location":"right","right":75,"top":70,"bold":true,"input_value":0},
-                {"type":"button","text":"2","id":"button2","location":"right","right":5,"top":70,"bold":true,"input_value":8},
-                {"type":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"button","text":"1","id":"button_1","location":"right","right":75,"top":70,"bold":true,"input_value":0},
+                {"type":"button","text":"2","id":"button_2","location":"right","right":5,"top":70,"bold":true,"input_value":8},
+                {"type":"dpad","id":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
                 {"type":"button","text":"Reset","id":"reset","location":"center","left":-35,"fontSize":15,"block":true,"input_value":9},
                 {"type":"button","text":"Pause","id":"pause","location":"center","left":95,"fontSize":15,"block":true,"input_value":3},
                 {"type":"button","text":"Select","id":"select","location":"center","left":30,"fontSize":15,"block":true,"input_value":2},
@@ -3255,11 +3298,11 @@ class EmulatorJS {
             info.push(...speedControlButtons);
         } else if ("lynx" === this.getControlScheme()) {
             info = [
-                {"type":"button","text":"B","id":"button1","location":"right","right":75,"top":70,"bold":true,"input_value":0},
-                {"type":"button","text":"A","id":"button2","location":"right","right":5,"top":70,"bold":true,"input_value":8},
-                {"type":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
-                {"type":"button","text":"Opt 1","id":"option1","location":"center","left":-35,"fontSize":15,"block":true,"input_value":10},
-                {"type":"button","text":"Opt 2","id":"option2","location":"center","left":95,"fontSize":15,"block":true,"input_value":11},
+                {"type":"button","text":"B","id":"button_1","location":"right","right":75,"top":70,"bold":true,"input_value":0},
+                {"type":"button","text":"A","id":"button_2","location":"right","right":5,"top":70,"bold":true,"input_value":8},
+                {"type":"dpad","id":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"button","text":"Opt 1","id":"option_1","location":"center","left":-35,"fontSize":15,"block":true,"input_value":10},
+                {"type":"button","text":"Opt 2","id":"option_2","location":"center","left":95,"fontSize":15,"block":true,"input_value":11},
                 {"type":"button","text":"Start","id":"start","location":"center","left":30,"fontSize":15,"block":true,"input_value":3}
             ];
             info.push(...speedControlButtons);
@@ -3268,17 +3311,17 @@ class EmulatorJS {
                 {"type":"button","text":"A","id":"a","location":"right","right":145,"top":70,"bold":true,"input_value":8},
                 {"type":"button","text":"B","id":"b","location":"right","right":75,"top":70,"bold":true,"input_value":0},
                 {"type":"button","text":"C","id":"c","location":"right","right":5,"top":70,"bold":true,"input_value":1},
-                {"type":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
-                {"type":"button","text":"Option","id":"start","location":"center","left":60,"fontSize":15,"block":true,"input_value":3},
-                {"type":"button","text":"Pause","id":"select","location":"center","left":-5,"fontSize":15,"block":true,"input_value":2}
+                {"type":"dpad","id":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"button","text":"Option","id":"option","location":"center","left":60,"fontSize":15,"block":true,"input_value":3},
+                {"type":"button","text":"Pause","id":"pause","location":"center","left":-5,"fontSize":15,"block":true,"input_value":2}
             ];
             info.push(...speedControlButtons);
         } else if ("vb" === this.getControlScheme()) {
             info = [
                 {"type":"button","text":"B","id":"b","location":"right","right":75,"top":150,"bold":true,"input_value":0},
                 {"type":"button","text":"A","id":"a","location":"right","right":5,"top":150,"bold":true,"input_value":8},
-                {"type":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
-                {"type":"dpad","location":"right","left":"50%","right":"50%","joystickInput":false,"inputValues":[19,18,17,16]},
+                {"type":"dpad","id":"left_dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"dpad","id":"right_dpad","location":"right","left":"50%","right":"50%","joystickInput":false,"inputValues":[19,18,17,16]},
                 {"type":"button","text":"L","id":"l","location":"left","left":3,"top":-90,"bold":true,"block":true,"input_value":10},
                 {"type":"button","text":"R","id":"r","location":"right","right":3,"top":-90,"bold":true,"block":true,"input_value":11},
                 {"type":"button","text":"Start","id":"start","location":"center","left":60,"fontSize":15,"block":true,"input_value":3},
@@ -3290,18 +3333,18 @@ class EmulatorJS {
                 {"type":"button","text":"A","id":"a","location":"right","right":145,"top":70,"bold":true,"input_value":1},
                 {"type":"button","text":"B","id":"b","location":"right","right":75,"top":70,"bold":true,"input_value":0},
                 {"type":"button","text":"C","id":"c","location":"right","right":5,"top":70,"bold":true,"input_value":8},
-                {"type":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"dpad","id":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
                 {"type":"button","text":"L","id":"l","location":"left","left":3,"top":-90,"bold":true,"block":true,"input_value":10},
                 {"type":"button","text":"R","id":"r","location":"right","right":3,"top":-90,"bold":true,"block":true,"input_value":11},
-                {"type":"button","text":"X","id":"select","location":"center","left":-5,"fontSize":15,"block":true,"bold":true,"input_value":2},
-                {"type":"button","text":"P","id":"start","location":"center","left":60,"fontSize":15,"block":true,"bold":true,"input_value":3}
+                {"type":"button","text":"X","id":"x","location":"center","left":-5,"fontSize":15,"block":true,"bold":true,"input_value":2},
+                {"type":"button","text":"P","id":"p","location":"center","left":60,"fontSize":15,"block":true,"bold":true,"input_value":3}
             ];
             info.push(...speedControlButtons);
         } else if ("pce" === this.getControlScheme()) {
             info = [
                 {"type":"button","text":"II","id":"ii","location":"right","right":75,"top":70,"bold":true,"input_value":0},
                 {"type":"button","text":"I","id":"i","location":"right","right":5,"top":70,"bold":true,"input_value":8},
-                {"type":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"dpad","id":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
                 {"type":"button","text":"Run","id":"run","location":"center","left":60,"fontSize":15,"block":true,"input_value":3},
                 {"type":"button","text":"Select","id":"select","location":"center","left":-5,"fontSize":15,"block":true,"input_value":2}
             ];
@@ -3310,7 +3353,7 @@ class EmulatorJS {
                 info = [
                     {"type":"button","text":"A","id":"a","location":"right","right":75,"top":70,"bold":true,"input_value":0},
                     {"type":"button","text":"B","id":"b","location":"right","right":5,"top":50,"bold":true,"input_value":8},
-                    {"type":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                    {"type":"dpad","id":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
                     {"type":"button","text":"Option","id":"option","location":"center","left":30,"fontSize":15,"block":true,"input_value":3}
                 ];
                 info.push(...speedControlButtons);
@@ -3318,16 +3361,16 @@ class EmulatorJS {
             info = [
                 {"type":"button","text":"B","id":"b","location":"right","right":75,"top":150,"bold":true,"input_value":0},
                 {"type":"button","text":"A","id":"a","location":"right","right":5,"top":150,"bold":true,"input_value":8},
-                {"type":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
-                {"type":"dpad","location":"right","left":"50%","right":"50%","joystickInput":false,"inputValues":[13,12,10,11]},
+                {"type":"dpad","id":"x_dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"dpad","id":"y_dpad","location":"right","left":"50%","right":"50%","joystickInput":false,"inputValues":[13,12,10,11]},
                 {"type":"button","text":"Start","id":"start","location":"center","left":30,"fontSize":15,"block":true,"input_value":3},
             ];
             info.push(...speedControlButtons);
         } else if ('coleco' === this.getControlScheme()) {
             info = [
-                {"type":"button","text":"L","id":"buttonLeft","location":"right","left":10,"top":40,"bold":true,"input_value":8},
-                {"type":"button","text":"R","id":"buttonRight","location":"right","left":81,"top":40,"bold":true,"input_value":0},
-                {"type":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]}
+                {"type":"button","text":"L","id":"l","location":"right","left":10,"top":40,"bold":true,"input_value":8},
+                {"type":"button","text":"R","id":"r","location":"right","left":81,"top":40,"bold":true,"input_value":0},
+                {"type":"dpad","id":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]}
             ];
             info.push(...speedControlButtons);
         } else if ('pcfx' === this.getControlScheme()) {
@@ -3338,7 +3381,7 @@ class EmulatorJS {
                 {"type":"button","text":"IV","id":"iv","location":"right","right":5,"top":0,"bold":true,"input_value":1},
                 {"type":"button","text":"V","id":"v","location":"right","right":75,"top":0,"bold":true,"input_value":10},
                 {"type":"button","text":"VI","id":"vi","location":"right","right":145,"top":0,"bold":true,"input_value":11},
-                {"type":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"dpad","id":"dpad","location":"left","left":"50%","right":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
                 {"type":"button","text":"Select","id":"select","location":"center","left":-5,"fontSize":15,"block":true,"input_value":2},
                 {"type":"button","text":"Run","id":"run","location":"center","left":60,"fontSize":15,"block":true,"input_value":3}
             ];
@@ -3346,10 +3389,10 @@ class EmulatorJS {
         } else {
             info = [
                 {"type":"button","text":"Y","id":"y","location":"right","left":40,"bold":true,"input_value":9},
-                {"type":"button","text":"X","id":"X","location":"right","top":40,"bold":true,"input_value":1},
+                {"type":"button","text":"X","id":"x","location":"right","top":40,"bold":true,"input_value":1},
                 {"type":"button","text":"B","id":"b","location":"right","left":81,"top":40,"bold":true,"input_value":8},
                 {"type":"button","text":"A","id":"a","location":"right","left":40,"top":80,"bold":true,"input_value":0},
-                {"type":"zone","location":"left","left":"50%","top":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
+                {"type":"zone","id":"dpad","location":"left","left":"50%","top":"50%","joystickInput":false,"inputValues":[4,5,6,7]},
                 {"type":"button","text":"Start","id":"start","location":"center","left":60,"fontSize":15,"block":true,"input_value":3},
                 {"type":"button","text":"Select","id":"select","location":"center","left":-5,"fontSize":15,"block":true,"input_value":2}
             ];
@@ -3387,6 +3430,7 @@ class EmulatorJS {
         
         const leftHandedMode = false;
         const blockCSS = 'height:31px;text-align:center;border:1px solid #ccc;border-radius:5px;line-height:31px;';
+        const controlSchemeCls = `cs_${this.getControlScheme()}`.replaceAll(/\s/g, '_');
         
         for (let i=0; i<info.length; i++) {
             if (info[i].type !== 'button') continue;
@@ -3424,7 +3468,10 @@ class EmulatorJS {
                 const button = this.createElement("div");
                 button.style = style;
                 button.innerText = info[i].text;
-                button.classList.add("ejs_virtualGamepad_button");
+                button.classList.add("ejs_virtualGamepad_button", controlSchemeCls);
+                if (info[i].id) {
+                    button.classList.add(`b_${info[i].id}`);
+                }
                 elems[info[i].location].appendChild(button);
                 const value = info[i].input_new_cores || info[i].input_value;
                 this.addEventListener(button, "touchstart touchend touchcancel", (e) => {
@@ -3548,6 +3595,10 @@ class EmulatorJS {
             if (dpad.top) {
                 style += 'top:'+dpad.top+';';
             }
+            elem.classList.add(controlSchemeCls);
+            if (dpad.id) {
+                elem.classList.add(`b_${dpad.id}`);
+            }
             elem.style = style;
             elems[dpad.location].appendChild(elem);
             createDPad({container: elem, event: (up, down, left, right) => {
@@ -3581,6 +3632,10 @@ class EmulatorJS {
             this.addEventListener(elem, "touchstart touchmove touchend touchcancel", (e) => {
                 e.preventDefault();
             });
+            elem.classList.add(controlSchemeCls);
+            if (zone.id) {
+                elem.classList.add(`b_${zone.id}`);
+            }
             elems[zone.location].appendChild(elem);
             const zoneObj = nipplejs.create({
                 'zone': elem,
@@ -3824,15 +3879,7 @@ class EmulatorJS {
         this.saveSettings();
         if (this.debug) console.log(option, value);
         if (option === "shader") {
-            try {
-                this.Module.FS.unlink("/shader/shader.glslp");
-            } catch(e) {}
-            if (value === "disabled") {
-                this.gameManager.toggleShader(0);
-                return;
-            }
-            this.Module.FS.writeFile("/shader/shader.glslp", window.EJS_SHADERS[value]);
-            this.gameManager.toggleShader(1);
+            this.enableShader(value);
             return;
         } else if (option === "disk") {
             this.gameManager.setCurrentDisk(value);
@@ -3877,9 +3924,196 @@ class EmulatorJS {
             if (this.rewindEnabled) {
                 this.gameManager.setRewindGranularity(parseInt(value));
             }
+        } else if (option === "vsync") {
+            this.gameManager.setVSync(value === "enabled");
         }
         this.gameManager.setVariable(option, value);
         this.saveSettings();
+    }
+    setupDisksMenu() {
+        this.disksMenu = this.createElement("div");
+        this.disksMenu.classList.add("ejs_settings_parent");
+        const nested = this.createElement("div");
+        nested.classList.add("ejs_settings_transition");
+        this.disks = {};
+        
+        const home = this.createElement("div");
+        home.style.overflow = "auto";
+        const menus = [];
+        this.handleDisksResize = () => {
+            let needChange = false;
+            if (this.disksMenu.style.display !== "") {
+                this.disksMenu.style.opacity = "0";
+                this.disksMenu.style.display = "";
+                needChange = true;
+            }
+            let height = this.elements.parent.getBoundingClientRect().height;
+            let w2 = this.diskParent.parentElement.getBoundingClientRect().width;
+            let disksX = this.diskParent.getBoundingClientRect().x;
+            if (w2 > window.innerWidth) disksX += (w2 - window.innerWidth);
+            const onTheRight = disksX > (w2-15)/2;
+            if (height > 375) height = 375;
+            home.style['max-height'] = (height - 95) + "px";
+            nested.style['max-height'] = (height - 95) + "px";
+            for (let i=0; i<menus.length; i++) {
+                menus[i].style['max-height'] = (height - 95) + "px";
+            }
+            this.disksMenu.classList.toggle("ejs_settings_center_left", !onTheRight);
+            this.disksMenu.classList.toggle("ejs_settings_center_right", onTheRight);
+            if (needChange) {
+                this.disksMenu.style.display = "none";
+                this.disksMenu.style.opacity = "";
+            }
+        }
+        
+        home.classList.add("ejs_setting_menu");
+        nested.appendChild(home);
+        let funcs = [];
+        this.changeDiskOption = (title, newValue) => {
+            this.disks[title] = newValue;
+            funcs.forEach(e => e(title));
+        }
+        let allOpts = {};
+        
+        const addToMenu = (title, id, options, defaultOption) => {
+            const span = this.createElement("span");
+            span.innerText = title;
+            
+            const current = this.createElement("div");
+            current.innerText = "";
+            current.classList.add("ejs_settings_main_bar_selected");
+            span.appendChild(current);
+            
+            const menu = this.createElement("div");
+            menus.push(menu);
+            menu.style.overflow  = "auto";
+            menu.setAttribute("hidden", "");
+            const button = this.createElement("button");
+            const goToHome = () => {
+                const homeSize = this.getElementSize(home);
+                nested.style.width = (homeSize.width+20) + "px";
+                nested.style.height = homeSize.height + "px";
+                menu.setAttribute("hidden", "");
+                home.removeAttribute("hidden");
+            }
+            this.addEventListener(button, "click", goToHome);
+            
+            button.type = "button";
+            button.classList.add("ejs_back_button");
+            menu.appendChild(button);
+            const pageTitle = this.createElement("span");
+            pageTitle.innerText = title;
+            pageTitle.classList.add("ejs_menu_text_a");
+            button.appendChild(pageTitle);
+            
+            const optionsMenu = this.createElement("div");
+            optionsMenu.classList.add("ejs_setting_menu");
+            
+            let buttons = [];
+            let opts = options;
+            if (Array.isArray(options)) {
+                opts = {};
+                for (let i=0; i<options.length; i++) {
+                    opts[options[i]] = options[i];
+                }
+            }
+            allOpts[id] = opts;
+            
+            funcs.push((title) => {
+                if (id !== title) return;
+                for (let j=0; j<buttons.length; j++) {
+                    buttons[j].classList.toggle("ejs_option_row_selected", buttons[j].getAttribute("ejs_value") === this.disks[id]);
+                }
+                this.menuOptionChanged(id, this.disks[id]);
+                current.innerText = opts[this.disks[id]];
+            });
+            
+            for (const opt in opts) {
+                const optionButton = this.createElement("button");
+                buttons.push(optionButton);
+                optionButton.setAttribute("ejs_value", opt);
+                optionButton.type = "button";
+                optionButton.value = opts[opt];
+                optionButton.classList.add("ejs_option_row");
+                optionButton.classList.add("ejs_button_style");
+                
+                this.addEventListener(optionButton, "click", (e) => {
+                    this.disks[id] = opt;
+                    for (let j=0; j<buttons.length; j++) {
+                        buttons[j].classList.remove("ejs_option_row_selected");
+                    }
+                    optionButton.classList.add("ejs_option_row_selected");
+                    this.menuOptionChanged(id, opt);
+                    current.innerText = opts[opt];
+                    goToHome();
+                })
+                if (defaultOption === opt) {
+                    optionButton.classList.add("ejs_option_row_selected");
+                    this.menuOptionChanged(id, opt);
+                    current.innerText = opts[opt];
+                }
+                
+                const msg = this.createElement("span");
+                msg.innerText = opts[opt];
+                optionButton.appendChild(msg);
+                
+                optionsMenu.appendChild(optionButton);
+            }
+            
+            home.appendChild(optionsMenu);
+            
+            nested.appendChild(menu);
+        }
+        
+        if (this.gameManager.getDiskCount() > 1) {
+            const diskLabels = {};
+            let isM3U = false;
+            let disks = {};
+            if (this.fileName.split(".").pop() === "m3u") {
+                disks = this.gameManager.Module.FS.readFile(this.fileName, { encoding: 'utf8' }).split("\n");
+                isM3U = true;
+            }
+            for (let i=0; i<this.gameManager.getDiskCount(); i++) {
+                // default if not an m3u loaded rom is "Disk x"
+                // if m3u, then use the file name without the extension
+                // if m3u, and contains a |, then use the string after the | as the disk label
+                if (!isM3U) {
+                    diskLabels[i.toString()] = "Disk "+(i+1);
+                } else {
+                    // get disk name from m3u
+                    const diskLabelValues = disks[i].split("|");
+                    // remove the file extension from the disk file name
+                    let diskLabel = diskLabelValues[0].replace("." + diskLabelValues[0].split(".").pop(), "");
+                    if (diskLabelValues.length >= 2) {
+                        // has a label - use that instead
+                        diskLabel = diskLabelValues[1];
+                    }
+                    diskLabels[i.toString()] = diskLabel;
+                }
+            }
+            addToMenu(this.localization("Disk"), "disk", diskLabels, this.gameManager.getCurrentDisk().toString());
+        }
+        
+        this.disksMenu.appendChild(nested);
+        
+        this.diskParent.appendChild(this.disksMenu);
+        this.diskParent.style.position = "relative";
+        
+        const homeSize = this.getElementSize(home);
+        nested.style.width = (homeSize.width+20) + "px";
+        nested.style.height = homeSize.height + "px";
+        
+        this.disksMenu.style.display = "none";
+        
+        if (this.debug) {
+            console.log("Available core options", allOpts);
+        }
+        
+        if (this.config.defaultOptions) {
+            for (const k in this.config.defaultOptions) {
+                this.changeDiskOption(k, this.config.defaultOptions[k]);
+            }
+        }
     }
     setupSettingsMenu() {
         this.settingsMenu = this.createElement("div");
@@ -3971,8 +4205,6 @@ class EmulatorJS {
             
             const optionsMenu = this.createElement("div");
             optionsMenu.classList.add("ejs_setting_menu");
-            //optionsMenu.style["max-height"] = "385px";
-            //optionsMenu.style.overflow  = "auto";
             
             let buttons = [];
             let opts = options;
@@ -4029,34 +4261,46 @@ class EmulatorJS {
             
             nested.appendChild(menu);
         }
-        //addToMenu("Test", 'test', {a:1, b:2, c:3}, 2);
-        //addToMenu("Test2", 'test_2', [4, 5, 6]);
-        //addToMenu("Testertthgfd", 'booger', [7, 8, 9]);
-        
-        if (this.gameManager.getDiskCount() > 1) {
-            const diskLabels = {};
-            for (let i=0; i<this.gameManager.getDiskCount(); i++) {
-                diskLabels[i.toString()] = "Disk "+(i+1);
-            }
-            addToMenu(this.localization("Disk"), "disk", diskLabels, this.gameManager.getCurrentDisk().toString());
-        }
-        
-        if (window.EJS_SHADERS) {
-            addToMenu(this.localization('Shaders'), 'shader', {
-                'disabled': this.localization("Disabled"),
+
+        if (this.config.shaders) {
+            const builtinShaders = {
                 '2xScaleHQ.glslp': this.localization("2xScaleHQ"),
                 '4xScaleHQ.glslp': this.localization("4xScaleHQ"),
-                'crt-easymode.glslp': this.localization('CRT easymode'),
                 'crt-aperture.glslp': this.localization('CRT aperture'),
+                'crt-beam': this.localization('CRT beam'),
+                'crt-caligari': this.localization('CRT caligari'),
+                'crt-easymode.glslp': this.localization('CRT easymode'),
                 'crt-geom.glslp': this.localization('CRT geom'),
-                'crt-mattias.glslp': this.localization('CRT mattias')
-            }, 'disabled');
+                'crt-lottes': this.localization('CRT lottes'),
+                'crt-mattias.glslp': this.localization('CRT mattias'),
+                'crt-yeetron': this.localization('CRT yeetron'),
+                'crt-zfast': this.localization('CRT zfast'),
+                'sabr': this.localization('SABR'),
+                'bicubic': this.localization('Bicubic'),
+                'mix-frames': this.localization('Mix frames'),
+            };
+            let shaderMenu = {
+                'disabled': this.localization("Disabled"),
+            };
+            for (const shaderName in this.config.shaders) {
+                if (builtinShaders[shaderName]) {
+                    shaderMenu[shaderName] = builtinShaders[shaderName];
+                } else {
+                    shaderMenu[shaderName] = shaderName;
+                }
+            }
+            addToMenu(this.localization('Shaders'), 'shader', shaderMenu, 'disabled');
         }
         
         addToMenu(this.localization('FPS'), 'fps', {
             'show': this.localization("show"),
             'hide': this.localization("hide")
         }, 'hide');
+        
+        addToMenu(this.localization("VSync"), "vsync", {
+            'enabled': this.localization("Enabled"),
+            'disabled': this.localization("Disabled")
+        }, "enabled");
         
         addToMenu(this.localization('Fast Forward Ratio'), 'ff-ratio', [
             "1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5", "5.0", "5.5", "6.0", "6.5", "7.0", "7.5", "8.0", "8.5", "9.0", "9.5", "10.0", "unlimited"
@@ -4932,6 +5176,33 @@ class EmulatorJS {
     }
     cheatChanged(checked, code, index) {
         this.gameManager.setCheat(index, checked, code);
+    }
+
+    enableShader(name) {
+        try {
+            this.Module.FS.unlink("/shader/shader.glslp");
+        } catch(e) {}
+
+        if (name === "disabled" || !this.config.shaders[name]) {
+            this.gameManager.toggleShader(0);
+            return;
+        }
+
+        const shaderConfig = this.config.shaders[name];
+
+        if (typeof shaderConfig === 'string') {
+            this.Module.FS.writeFile("/shader/shader.glslp", shaderConfig, {}, 'w+');
+        } else {
+            const shader = shaderConfig.shader;
+            this.Module.FS.writeFile('/shader/shader.glslp', shader.type === 'base64' ? atob(shader.value) : shader.value, {}, 'w+');
+            if (shaderConfig.resources && shaderConfig.resources.length) {
+                shaderConfig.resources.forEach(resource => {
+                    this.Module.FS.writeFile(`/shader/${resource.name}`, resource.type === 'base64' ? atob(resource.value) : resource.value, {}, 'w+');
+                });
+            }
+        }
+
+        this.gameManager.toggleShader(1);
     }
 
     collectScreenRecordingMediaTracks(canvasEl, fps) {
