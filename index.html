@@ -8,7 +8,8 @@
     <style>
         body, html {
             height: 100%;
-            background-color: black;
+            background: url('docs/bg_hue.png') no-repeat center center fixed;
+            background-size: cover;
             color: yellow;
             margin: 0;
             overflow: hidden;
@@ -89,9 +90,29 @@
         #top {
             margin: 5px;
         }
+
+        .icon-left, .icon-right {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            max-width: 35%;
+            height: auto;
+        }
+
+        .icon-left {
+            left: 10px;
+        }
+
+        .icon-right {
+            right: 10px;
+        }
     </style>
 </head>
 <body>
+    <img src="docs/huehue.png" alt="Icon Left" class="icon-left" id="icon-left">
+    <img src="docs/hue.png" alt="Icon Right" class="icon-right" id="icon-right">
+    
     <header id="top">
         <h1>RetroHueHue JS</h1>
         <img src="docs/Logo-light.png" alt="Logo" class="logo">
@@ -183,7 +204,12 @@
                         select.appendChild(option);
                     }
 
-                    button.onclick = () => resolve(select[select.selectedIndex].value);
+                    button.onclick = () => {
+                        // Esconder ícones ao clicar no botão Jogar
+                        document.getElementById('icon-left').style.display = 'none';
+                        document.getElementById('icon-right').style.display = 'none';
+                        resolve(select[select.selectedIndex].value);
+                    };
                     button.textContent = "Jogar";
                     box.innerHTML = "";
 
