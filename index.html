@@ -57,22 +57,22 @@
             font-family: monospace;
             font-weight: bold;
             font-size: 16px;
-            background-color: #444;
-            color: #aaa;
+            background-color: #4CAF50; /* Verde limão */
+            color: white;
+            border: 2px solid white;
             border-radius: 0.4em;
-            border: 1px solid #555;
             cursor: pointer;
             transition: background-color 0.2s, color 0.2s;
         }
 
         select:hover, button:hover {
-            background-color: #666;
-            color: #ddd;
+            background-color: #45a049; /* Verde limão escuro */
         }
 
         select {
             color: yellow; /* Texto amarelo */
             text-align: center; /* Centralizar texto */
+            border: 1px solid white; /* Borda branca */
         }
 
         .logo {
@@ -98,6 +98,23 @@
         .icon-right {
             right: 10px;
         }
+
+        .custom-button {
+            background-color: #4CAF50; /* Verde limão */
+            color: white;
+            border: 2px solid white;
+            font-weight: bold; /* Texto em negrito */
+        }
+
+        .custom-button:hover {
+            background-color: #45a049; /* Verde limão escuro */
+        }
+
+        /* Letras das legendas dos botões em negrito e cor branca */
+        button, select {
+            font-weight: bold;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -122,8 +139,6 @@
             <option value="n64">Nintendo - 64</option>
             <option value="pcfx">NEC - PC-FX</option>
             <option value="pce">NEC - TurboGrafx-16</option>
-            <option value="pce">NEC - SuperGrafx</option>
-            <option value="pce">NEC - PC Engine</option>
             <option value="psx">Sony - PlayStation</option>
             <option value="sega32x">Sega - 32X</option>
             <option value="segaCD">Sega - Mega CD</option>
@@ -143,10 +158,7 @@
             <option value="ws">Bandai - WonderSwan</option>
         </select>
         <br>
-        <button onclick="chooseFile('local')">Escolher ROM Localmente</button>
-        <button onclick="chooseFile('google')">Escolher ROM do Google Drive</button>
-        <button onclick="chooseFile('dropbox')">Escolher ROM do Dropbox</button>
-        <button onclick="chooseFile('onedrive')">Escolher ROM do OneDrive</button>
+        <button onclick="chooseLocalFile()">Escolher ROM Localmente</button>
     </main>
 
     <script>
@@ -165,22 +177,10 @@
         selectCore.innerHTML = "";
         optionsArray.forEach(option => selectCore.appendChild(option));
 
-        function chooseFile(source) {
-            if (source === 'local') {
-                chooseLocalFile();
-            } else if (source === 'google') {
-                chooseGoogleDriveFile();
-            } else if (source === 'dropbox') {
-                chooseDropboxFile();
-            } else if (source === 'onedrive') {
-                chooseOneDriveFile();
-            }
-        }
-
         function chooseLocalFile() {
             const input = document.createElement("input");
             input.type = "file";
-            input.accept = ".rom, .zip"; // Defina os tipos de arquivo suportados
+            input.accept = ""; // Todos os tipos de arquivo são aceitos
             input.onchange = handleFileSelection;
             input.click();
         }
@@ -190,21 +190,6 @@
             if (!file) return;
 
             loadGame(file);
-        }
-
-        function chooseGoogleDriveFile() {
-            // Implementação do Google Drive removida por questões de segurança e OAuth.
-            console.error('Implementação do Google Drive não está disponível no exemplo.');
-        }
-
-        function chooseDropboxFile() {
-            // Implementação do Dropbox removida por questões de segurança e OAuth.
-            console.error('Implementação do Dropbox não está disponível no exemplo.');
-        }
-
-        function chooseOneDriveFile() {
-            // Implementação do OneDrive removida por questões de segurança e OAuth.
-            console.error('Implementação do OneDrive não está disponível no exemplo.');
         }
 
         function loadGame(file) {
@@ -224,6 +209,7 @@
 
             const top = document.getElementById("top");
             top.remove();
+            const box = document.getElementById("box");
             box.remove();
             div.appendChild(sub);
             document.body.appendChild(div);
