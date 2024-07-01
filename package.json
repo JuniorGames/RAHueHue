@@ -1,9 +1,9 @@
 {
-  "name": "@emulatorjs/emulatorjs",
-  "version": "4.0.11",
+  "name": "@@juniorgameslives/retrohuehuejs",
+  "version": "4.0.12",
   "repository": {
     "type": "git",
-    "url": "https://github.com/EmulatorJS/EmulatorJS.git"
+    "url": "https://github.com/RetroHueHue/RetroHueHue JS.git"
   },
   "license": "GPL-3.0",
   "description": "RetroHueHue JS is a frontend for RetroArch in the web browser.",
@@ -11,6 +11,6 @@
     "start": "http-server"
   },
   "dependencies": {
-    "http-server": "^1.4.12"
+    "http-server": "^4.0.12"
   }
 }
