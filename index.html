@@ -52,7 +52,7 @@
         select, button {
             padding: 0.6em 0.4em;
             margin: 0.5em;
-            width: 15em;
+            width: 15em; /* Largura fixa para os botões */
             max-width: 100%;
             font-family: monospace;
             font-weight: bold;
@@ -161,11 +161,7 @@
         <img src="docs/Logo-light.png" alt="Logo" class="logo">
     </header>
     <main id="box">
-        <div id="loadOptions">
-            <button onclick="chooseLoadMethod('local')">Carregar ROM Localmente</button>
-            <button onclick="chooseLoadMethod('url')">Carregar ROM com Link Direto</button>
-        </div>
-        <select id="selectCore" style="display: none;">
+        <select id="selectCore">
             <option value="" selected disabled hidden>Escolha o Console</option>
             <option value="atari2600">Atari - 2600</option>
             <option value="atari7800">Atari - 7800</option>
@@ -197,9 +193,11 @@
             <option value="ws">Bandai - WonderSwan</option>
         </select>
         <br>
-        <input type="file" id="fileInput" style="display: none;">
-        <input type="text" id="romUrl" placeholder="Cole o link direto da ROM" style="display: none;">
-        <button onclick="loadRom()">JOGAR</button>
+        <input type="text" id="romUrl" placeholder="Cole o link direto da ROM">
+        <button class="custom-button" onclick="loadRom()">JOGAR</button>
+        <br>
+        <input type="file" id="fileInput" style="display: none;" accept=".zip,.nes,.sfc,.smc,.gb,.gbc,.gba,.bin,.iso">
+        <button class="custom-button" onclick="openFile()">Carregar ROM Localmente</button>
     </main>
     
     <p class="footer">Projeto RetroGames HueHue</p>
@@ -213,69 +211,29 @@
         console.log(`Debug is ${enableDebug ? 'enabled' : 'disabled'}`);
 
         const selectCore = document.getElementById('selectCore');
-        const fileInput = document.getElementById('fileInput');
         const romUrlInput = document.getElementById('romUrl');
-        let loadMethod = '';
+        const fileInput = document.getElementById('fileInput');
 
-        function chooseLoadMethod(method) {
-            loadMethod = method;
-            if (method === 'local') {
-                fileInput.style.display = 'block';
-                romUrlInput.style.display = 'none';
-            } else if (method === 'url') {
-                fileInput.style.display = 'none';
-                romUrlInput.style.display = 'block';
-            }
-            document.getElementById('loadOptions').style.display = 'none';
-            selectCore.style.display = 'block';
-        }
+        // Ordenar os options em ordem alfabética
+        const optionsArray = Array.from(selectCore.options);
+        optionsArray.sort((a, b) => a.text.localeCompare(b.text));
+        selectCore.innerHTML = "";
+        optionsArray.forEach(option => selectCore.appendChild(option));
 
         function loadRom() {
-            const selectedFile = fileInput.files[0];
+            const romUrl = romUrlInput.value;
 
-            if (loadMethod === 'url' && romUrlInput.value) {
-                loadGameFromUrl(romUrlInput.value, selectCore.value);
-            } else if (loadMethod === 'local' && selectedFile) {
-                loadGame(selectedFile, selectCore.value);
+            if (romUrl) {
+                loadGameFromUrl(romUrl, selectCore.value);
+            } else if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                loadGameFromFile(file, selectCore.value);
             } else {
-                alert('Por favor, escolha uma opção válida para carregar a ROM.');
+                alert('Por favor, cole o link direto da ROM ou selecione um arquivo local.');
             }
-        }
-
-        function loadGame(file, core) {
-            const iconLeft = document.getElementById('icon-left');
-            const iconRight = document.getElementById('icon-right');
-            iconLeft.style.display = 'none';
-            iconRight.style.display = 'none';
-
-            selectCore.style.display = 'none';
-
-            const div = document.createElement("div");
-            const script = document.createElement("script");
-
-            div.id = "display";
-
-            const box = document.getElementById("box");
-            box.innerHTML = "";
-            box.appendChild(div);
-
-            window.EJS_player = "#display";
-            window.EJS_gameName = file.name;
-            window.EJS_biosUrl = "";
-            window.EJS_gameFile = file;
-            window.EJS_pathtodata = "data/";
-            window.EJS_startOnLoaded = true;
-            window.EJS_DEBUG_XX = enableDebug;
-            window.EJS_disableDatabases = true;
-            window.EJS_core = core;
-
-            script.src = "data/loader.js";
-            document.body.appendChild(script);
         }
 
         function loadGameFromUrl(romUrl, core) {
-            selectCore.style.display = 'none';
-
             const div = document.createElement("div");
             const script = document.createElement("script");
 
@@ -297,6 +255,20 @@
 
             script.src = "data/loader.js";
             document.body.appendChild(script);
+        }
+
+        function loadGameFromFile(file, core) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const romUrl = event.target.result;
+                loadGameFromUrl(romUrl, core);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function openFile() {
+            const fileInput = document.getElementById('fileInput');
+            fileInput.click();
         }
     </script>
 </body>
