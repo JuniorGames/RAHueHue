@@ -12,6 +12,7 @@
             color: yellow;
             margin: 0;
             overflow: hidden;
+            position: relative;
         }
 
         body, #box, #top {
@@ -52,12 +53,12 @@
         select, button {
             padding: 0.6em 0.4em;
             margin: 0.5em;
-            width: 15em; /* Largura fixa para os botões */
+            width: 15em;
             max-width: 100%;
             font-family: monospace;
             font-weight: bold;
             font-size: 16px;
-            background-color: #4CAF50; /* Verde limão */
+            background-color: #4CAF50;
             color: white;
             border: 2px solid white;
             border-radius: 0.4em;
@@ -66,13 +67,13 @@
         }
 
         select:hover, button:hover {
-            background-color: #45a049; /* Verde limão escuro */
+            background-color: #45a049;
         }
 
         select {
-            color: yellow; /* Texto amarelo */
-            text-align: center; /* Centralizar texto */
-            border: 1px solid white; /* Borda branca */
+            color: yellow;
+            text-align: center;
+            border: 1px solid white;
         }
 
         .logo {
@@ -88,7 +89,7 @@
             z-index: 1000;
             max-width: 35%;
             height: auto;
-            filter: drop-shadow(0 0 10px white) brightness(1.2); /* Adicionando filtro de brilho */
+            filter: drop-shadow(0 0 10px white) brightness(1.2);
         }
 
         .icon-left {
@@ -100,60 +101,66 @@
         }
 
         .custom-button {
-            background-color: #4CAF50; /* Verde limão */
+            background-color: #4CAF50;
             color: white;
             border: 2px solid white;
-            font-weight: bold; /* Texto em negrito */
+            font-weight: bold;
         }
 
         .custom-button:hover {
-            background-color: #45a049; /* Verde limão escuro */
+            background-color: #45a049;
         }
 
-        /* Letras das legendas dos botões em negrito e cor branca */
         button, select {
             font-weight: bold;
             color: white;
         }
 
-        .credit {
+        .credit, .footer {
             color: white;
             font-style: italic;
             margin-top: 5px;
         }
-        
+
         .footer {
             position: absolute;
             bottom: 10px;
+        }
+
+        .header {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
             color: white;
             font-style: italic;
         }
 
         #romUrl {
-            width: 18em; /* Aumentando o tamanho do campo */
+            width: 18em;
             padding: 0.6em 0.4em;
             font-family: monospace;
             font-weight: bold;
             font-size: 16px;
-            background-color: #4CAF50; /* Verde limão */
+            background-color: #4CAF50;
             color: white;
             border: 2px solid white;
             border-radius: 0.4em;
             transition: background-color 0.2s, color 0.2s;
             margin: 0.5em;
             max-width: 100%;
-            text-align: center; /* Centralizar texto */
+            text-align: center;
         }
 
         #romUrl:hover {
-            background-color: #45a049; /* Verde limão escuro */
+            background-color: #45a049;
         }
 
     </style>
 </head>
 <body>
-    <img src="docs/huehue.png" alt="Icon Left" class="icon-left" id="icon-left">
-    <img src="docs/hue.png" alt="Icon Right" class="icon-right" id="icon-right">
+    <img src="docs/huehue.png" alt="Icon Left" class="icon-left">
+    <img src="docs/hue.png" alt="Icon Right" class="icon-right">
     
     <header id="top">
         <h1>RetroHueHue JS</h1>
@@ -193,20 +200,22 @@
             <option value="ws">Bandai - WonderSwan</option>
         </select>
         <br>
-        <input type="file" id="fileInput" style="display: none;" accept=".zip,.nes,.sfc,.smc,.gb,.gbc,.gba,.bin,.iso">
+        <input type="file" id="fileInput" style="display: none;" accept="">
         <button class="custom-button" id="loadLocalBtn" onclick="openFile()">Carregar ROM Localmente</button>
         <br>
         <input type="text" id="romUrl" placeholder="Cole o link direto da ROM">
         <button class="custom-button" onclick="loadRom()">JOGAR</button>
     </main>
     
-    <p class="footer">Projeto RetroGames HueHue</p>
+    <p class="header">Projeto RetroGames HueHue</p>
 
     <script>
         let enableDebug = false;
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
-        if (urlParams.get('debug') == 1) enableDebug = true;
+        if (urlParams.get('debug') === '1') {
+            enableDebug = true;
+        }
 
         console.log(`Debug is ${enableDebug ? 'enabled' : 'disabled'}`);
 
@@ -215,7 +224,6 @@
         const fileInput = document.getElementById('fileInput');
         const loadLocalBtn = document.getElementById('loadLocalBtn');
 
-        // Ordenar os options em ordem alfabética
         const optionsArray = Array.from(selectCore.options);
         optionsArray.sort((a, b) => a.text.localeCompare(b.text));
         selectCore.innerHTML = "";
@@ -223,12 +231,13 @@
 
         function loadRom() {
             const romUrl = romUrlInput.value;
+            const core = selectCore.value;
 
             if (romUrl) {
-                loadGameFromUrl(romUrl, selectCore.value);
+                loadGameFromUrl(romUrl, core);
             } else if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
-                loadGameFromFile(file, selectCore.value);
+                loadGameFromFile(file, core);
             } else {
                 alert('Por favor, cole o link direto da ROM ou selecione um arquivo local.');
             }
@@ -239,7 +248,6 @@
             const script = document.createElement("script");
 
             div.id = "display";
-
             const box = document.getElementById("box");
             box.innerHTML = "";
             box.appendChild(div);
