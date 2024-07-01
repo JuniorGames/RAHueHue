@@ -6,11 +6,11 @@
     "url": "https://github.com/EmulatorJS/EmulatorJS.git"
   },
   "license": "GPL-3.0",
-  "description": "EmulatorJS is a frontend for RetroArch in the web browser.",
+  "description": "RetroHueHue JS is a frontend for RetroArch in the web browser.",
   "scripts": {
     "start": "http-server"
   },
   "dependencies": {
-    "http-server": "^14.1.1"
+    "http-server": "^1.4.12"
   }
 }
