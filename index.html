@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RetroHueHue JS</title>
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script src="https://apis.google.com/js/client.js"></script>
-    <script src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="YOUR_DROPBOX_APP_KEY"></script>
-    <script src="https://js.live.net/v7.2/OneDrive.js"></script>
     <style>
         body, html {
             height: 100%;
@@ -114,34 +110,36 @@
     <main id="box">
         <select id="selectCore">
             <option value="" selected disabled hidden>Escolha o Console</option>
-            <option value="atari2600">Atari 2600</option>
-            <option value="atari7800">Atari 7800</option>
+            <option value="atari2600">Atari - 2600</option>
+            <option value="atari7800">Atari - 7800</option>
             <option value="coleco">ColecoVision</option>
-            <option value="gb">Nintendo Game Boy</option>
-            <option value="gba">Nintendo Game Boy Advance</option>
-            <option value="nds">Nintendo DS</option>
-            <option value="nes">Nintendo Entertainment System</option>
-            <option value="snes">Super Nintendo Entertainment System</option>
-            <option value="n64">Nintendo 64</option>
-            <option value="pcfx">NEC PC-FX</option>
-            <option value="pce">NEC TurboGrafx-16/SuperGrafx/PC Engine</option>
-            <option value="psx">PlayStation</option>
-            <option value="sega32x">Sega 32X</option>
-            <option value="segaCD">Sega CD</option>
-            <option value="segaGG">Sega Game Gear</option>
-            <option value="segaMD">Sega Mega Drive</option>
-            <option value="segaMS">Sega Master System</option>
-            <option value="segaSaturn">Sega Saturn</option>
-            <option value="lynx">Atari Lynx</option>
-            <option value="jaguar">Atari Jaguar</option>
-            <option value="vb">Virtual Boy</option>
+            <option value="gb">Nintendo - Game Boy</option>
+            <option value="gba">Nintendo - GB Advance</option>
+            <option value="nds">Nintendo - DS</option>
+            <option value="nes">Nintendo - NES</option>
+            <option value="snes">Nintendo - Super NES</option>
+            <option value="n64">Nintendo - 64</option>
+            <option value="pcfx">NEC - PC-FX</option>
+            <option value="pce">NEC - TurboGrafx-16</option>
+            <option value="pce">NEC - SuperGrafx</option>
+            <option value="pce">NEC - PC Engine</option>
+            <option value="psx">Sony - PlayStation</option>
+            <option value="sega32x">Sega - 32X</option>
+            <option value="segaCD">Sega - Mega CD</option>
+            <option value="segaGG">Sega - Game Gear</option>
+            <option value="segaMD">Sega - Mega Drive</option>
+            <option value="segaMS">Sega - Master System</option>
+            <option value="segaSaturn">Sega - Saturn</option>
+            <option value="lynx">Atari - Lynx</option>
+            <option value="jaguar">Atari - Jaguar</option>
+            <option value="vb">Nintendo - Virtual Boy</option>
             <option value="vice_x64sc">Commodore 64</option>
             <option value="vice_x128">Commodore 128</option>
             <option value="vice_xvic">Commodore VIC20</option>
             <option value="vice_xplus4">Commodore Plus/4</option>
             <option value="vice_xpet">Commodore PET</option>
-            <option value="ngp">SNK NeoGeo Pocket (Color)</option>
-            <option value="ws">Bandai WonderSwan (Color)</option>
+            <option value="ngp">SNK NeoGeo - Pocket</option>
+            <option value="ws">Bandai - WonderSwan</option>
         </select>
         <br>
         <button onclick="chooseFile('local')">Escolher ROM Localmente</button>
@@ -194,85 +192,18 @@
         }
 
         function chooseGoogleDriveFile() {
-            const picker = new google.picker.PickerBuilder()
-                .addView(google.picker.ViewId.DOCS)
-                .setOAuthToken('YOUR_OAUTH_TOKEN') // Substitua pelo token de acesso OAuth válido
-                .setDeveloperKey('YOUR_DEVELOPER_KEY') // Substitua pela chave de desenvolvedor válida
-                .setCallback(pickerCallback)
-                .build();
-            picker.setVisible(true);
-        }
-
-        function pickerCallback(data) {
-            if (data.action === google.picker.Action.PICKED) {
-                const file = data.docs[0];
-                const fileId = file.id;
-                const accessToken = gapi.auth.getToken().access_token;
-
-                fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                })
-                .then(response => response.blob())
-                .then(blob => {
-                    loadGame(blob);
-                })
-                .catch(error => {
-                    console.error('Erro ao carregar arquivo do Google Drive:', error);
-                });
-            }
+            // Implementação do Google Drive removida por questões de segurança e OAuth.
+            console.error('Implementação do Google Drive não está disponível no exemplo.');
         }
 
         function chooseDropboxFile() {
-            Dropbox.choose({
-                success: files => {
-                    if (files.length > 0) {
-                        const file = files[0];
-                        fetch(file.link, {
-                            headers: {
-                                'Authorization': `Bearer ${file.token}`
-                            }
-                        })
-                        .then(response => response.blob())
-                        .then(blob => {
-                            loadGame(blob);
-                        })
-                        .catch(error => {
-                            console.error('Erro ao carregar arquivo do Dropbox:', error);
-                        });
-                    }
-                },
-                cancel: () => {},
-                linkType: 'direct',
-                multiselect: false,
-                extensions: ['.rom', '.zip'] // Defina os tipos de arquivo suportados
-            });
+            // Implementação do Dropbox removida por questões de segurança e OAuth.
+            console.error('Implementação do Dropbox não está disponível no exemplo.');
         }
 
         function chooseOneDriveFile() {
-            OneDrive.open({
-                clientId: 'YOUR_ONEDRIVE_CLIENT_ID', // Substitua pelo seu Client ID do OneDrive
-                action: 'download',
-                multiSelect: false,
-                success: files => {
-                    if (files.values.length > 0) {
-                        const file = files.values[0];
-                        fetch(file['@microsoft.graph.downloadUrl'])
-                        .then(response => response.blob())
-                        .then(blob => {
-                            loadGame(blob);
-                        })
-                        .catch(error => {
-                            console.error('Erro ao carregar arquivo do OneDrive:', error);
-                        });
-                    }
-                },
-                cancel: () => {},
-                error: error => {
-                    console.error('Erro ao abrir arquivo do OneDrive:', error);
-                }
-            });
+            // Implementação do OneDrive removida por questões de segurança e OAuth.
+            console.error('Implementação do OneDrive não está disponível no exemplo.');
         }
 
         function loadGame(file) {
