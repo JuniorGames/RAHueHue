@@ -20,4 +20,4 @@ Todos os créditos da criação dos códigos são para os desenvolvedores origin
 
 Uso sem fins lucrativos comerciais, apenas um backup de projeto.
 
-Versão 4.0.11 RetroGames HueHue.
+Versão 4.0.12 RetroGames HueHue.
