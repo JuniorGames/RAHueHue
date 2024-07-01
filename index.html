@@ -193,11 +193,11 @@
             <option value="ws">Bandai - WonderSwan</option>
         </select>
         <br>
+        <input type="file" id="fileInput" style="display: none;" accept=".zip,.nes,.sfc,.smc,.gb,.gbc,.gba,.bin,.iso">
+        <button class="custom-button" id="loadLocalBtn" onclick="openFile()">Carregar ROM Localmente</button>
+        <br>
         <input type="text" id="romUrl" placeholder="Cole o link direto da ROM">
         <button class="custom-button" onclick="loadRom()">JOGAR</button>
-        <br>
-        <input type="file" id="fileInput" style="display: none;" accept=".zip,.nes,.sfc,.smc,.gb,.gbc,.gba,.bin,.iso">
-        <button class="custom-button" onclick="openFile()">Carregar ROM Localmente</button>
     </main>
     
     <p class="footer">Projeto RetroGames HueHue</p>
@@ -213,6 +213,7 @@
         const selectCore = document.getElementById('selectCore');
         const romUrlInput = document.getElementById('romUrl');
         const fileInput = document.getElementById('fileInput');
+        const loadLocalBtn = document.getElementById('loadLocalBtn');
 
         // Ordenar os options em ordem alfabética
         const optionsArray = Array.from(selectCore.options);
@@ -267,9 +268,16 @@
         }
 
         function openFile() {
-            const fileInput = document.getElementById('fileInput');
             fileInput.click();
         }
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                loadLocalBtn.textContent = fileInput.files[0].name;
+            } else {
+                loadLocalBtn.textContent = 'Carregar ROM Localmente';
+            }
+        });
     </script>
 </body>
 </html>
