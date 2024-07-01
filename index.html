@@ -128,6 +128,27 @@
             color: white;
             font-style: italic;
         }
+
+        #romUrl {
+            width: 18em; /* Aumentando o tamanho do campo */
+            padding: 0.6em 0.4em;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 16px;
+            background-color: #4CAF50; /* Verde limão */
+            color: white;
+            border: 2px solid white;
+            border-radius: 0.4em;
+            transition: background-color 0.2s, color 0.2s;
+            margin: 0.5em;
+            max-width: 100%;
+            text-align: center; /* Centralizar texto */
+        }
+
+        #romUrl:hover {
+            background-color: #45a049; /* Verde limão escuro */
+        }
+
     </style>
 </head>
 <body>
@@ -140,7 +161,11 @@
         <img src="docs/Logo-light.png" alt="Logo" class="logo">
     </header>
     <main id="box">
-        <select id="selectCore">
+        <div id="loadOptions">
+            <button onclick="chooseLoadMethod('local')">Carregar ROM Localmente</button>
+            <button onclick="chooseLoadMethod('url')">Carregar ROM com Link Direto</button>
+        </div>
+        <select id="selectCore" style="display: none;">
             <option value="" selected disabled hidden>Escolha o Console</option>
             <option value="atari2600">Atari - 2600</option>
             <option value="atari7800">Atari - 7800</option>
@@ -172,7 +197,9 @@
             <option value="ws">Bandai - WonderSwan</option>
         </select>
         <br>
-        <button onclick="chooseLocalFile()">Escolher ROM Localmente</button>
+        <input type="file" id="fileInput" style="display: none;">
+        <input type="text" id="romUrl" placeholder="Cole o link direto da ROM" style="display: none;">
+        <button onclick="loadRom()">JOGAR</button>
     </main>
     
     <p class="footer">Projeto RetroGames HueHue</p>
@@ -186,56 +213,82 @@
         console.log(`Debug is ${enableDebug ? 'enabled' : 'disabled'}`);
 
         const selectCore = document.getElementById('selectCore');
+        const fileInput = document.getElementById('fileInput');
+        const romUrlInput = document.getElementById('romUrl');
+        let loadMethod = '';
 
-        // Ordenar as opções do select alfabeticamente
-        const optionsArray = Array.from(selectCore.options);
-        optionsArray.sort((a, b) => a.text.localeCompare(b.text));
-        selectCore.innerHTML = "";
-        optionsArray.forEach(option => selectCore.appendChild(option));
-
-        function chooseLocalFile() {
-            const input = document.createElement("input");
-            input.type = "file";
-            input.accept = ""; // Todos os tipos de arquivo são aceitos
-            input.onchange = handleFileSelection;
-            input.click();
+        function chooseLoadMethod(method) {
+            loadMethod = method;
+            if (method === 'local') {
+                fileInput.style.display = 'block';
+                romUrlInput.style.display = 'none';
+            } else if (method === 'url') {
+                fileInput.style.display = 'none';
+                romUrlInput.style.display = 'block';
+            }
+            document.getElementById('loadOptions').style.display = 'none';
+            selectCore.style.display = 'block';
         }
 
-        function handleFileSelection(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        function loadRom() {
+            const selectedFile = fileInput.files[0];
 
-            loadGame(file);
+            if (loadMethod === 'url' && romUrlInput.value) {
+                loadGameFromUrl(romUrlInput.value, selectCore.value);
+            } else if (loadMethod === 'local' && selectedFile) {
+                loadGame(selectedFile, selectCore.value);
+            } else {
+                alert('Por favor, escolha uma opção válida para carregar a ROM.');
+            }
         }
 
-        function loadGame(file) {
-            // Remover ícones da tela
+        function loadGame(file, core) {
             const iconLeft = document.getElementById('icon-left');
             const iconRight = document.getElementById('icon-right');
             iconLeft.style.display = 'none';
             iconRight.style.display = 'none';
 
-            // Criar elementos para exibir o jogo
+            selectCore.style.display = 'none';
+
             const div = document.createElement("div");
-            const sub = document.createElement("div");
             const script = document.createElement("script");
 
-            sub.id = "game";
             div.id = "display";
 
-            const top = document.getElementById("top");
-            top.remove();
             const box = document.getElementById("box");
-            box.remove();
-            div.appendChild(sub);
-            document.body.appendChild(div);
+            box.innerHTML = "";
+            box.appendChild(div);
 
-            const core = selectCore.value;
-
-            window.EJS_player = "#game";
-            window.EJS_gameName = file.name.split('.')[0];
+            window.EJS_player = "#display";
+            window.EJS_gameName = file.name;
             window.EJS_biosUrl = "";
-            window.EJS_gameUrl = URL.createObjectURL(file);
+            window.EJS_gameFile = file;
+            window.EJS_pathtodata = "data/";
+            window.EJS_startOnLoaded = true;
+            window.EJS_DEBUG_XX = enableDebug;
+            window.EJS_disableDatabases = true;
+            window.EJS_core = core;
+
+            script.src = "data/loader.js";
+            document.body.appendChild(script);
+        }
+
+        function loadGameFromUrl(romUrl, core) {
+            selectCore.style.display = 'none';
+
+            const div = document.createElement("div");
+            const script = document.createElement("script");
+
+            div.id = "display";
+
+            const box = document.getElementById("box");
+            box.innerHTML = "";
+            box.appendChild(div);
+
+            window.EJS_player = "#display";
+            window.EJS_gameName = "ROM Carregada";
+            window.EJS_biosUrl = "";
+            window.EJS_gameUrl = romUrl;
             window.EJS_core = core;
             window.EJS_pathtodata = "data/";
             window.EJS_startOnLoaded = true;
