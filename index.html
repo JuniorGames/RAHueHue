@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RetroHueHue JS</title>
     <style>
+        /* Estilos gerais */
         body, html {
             height: 100%;
             background: url('docs/bg_hue.png') no-repeat center center fixed;
@@ -22,17 +23,18 @@
             flex-direction: column;
         }
 
+        /* Estilos da caixa principal */
         #box {
             color: #aaa;
-            height: 20em;
-            width: 30em;
+            height: 15em;
+            width: 15em;
             max-width: 80%;
             max-height: 80%;
             background-color: #333;
             border-radius: 0.4em;
             border: 2px solid #555;
             position: relative;
-            transition: border-color 0.2s, color 0.2s;
+            transition: border-color 0.2s, color 0.2s, height 0.5s, width 0.5s;
             overflow: hidden;
             font-family: monospace;
             font-weight: bold;
@@ -45,11 +47,7 @@
             color: #ddd;
         }
 
-        #display {
-            width: 100%;
-            height: 100%;
-        }
-
+        /* Estilos para botões e seleção */
         select, button {
             padding: 0.6em 0.4em;
             margin: 0.5em;
@@ -71,11 +69,12 @@
         }
 
         select {
-            color: yellow;
+            color: white;
             text-align: center;
             border: 1px solid white;
         }
 
+        /* Estilos para ícones e logo */
         .logo {
             width: 130px;
             height: 130px;
@@ -100,6 +99,7 @@
             right: 10px;
         }
 
+        /* Estilos para botões personalizados */
         .custom-button {
             background-color: #4CAF50;
             color: white;
@@ -111,33 +111,9 @@
             background-color: #45a049;
         }
 
-        button, select {
-            font-weight: bold;
-            color: white;
-        }
-
-        .credit, .footer {
-            color: white;
-            font-style: italic;
-            margin-top: 5px;
-        }
-
-        .footer {
-            position: absolute;
-            bottom: 10px;
-        }
-
-        .header {
-            position: absolute;
-            top: 10px;
-            width: 100%;
-            text-align: center;
-            color: white;
-            font-style: italic;
-        }
-
+        /* Estilos para entrada de URL da ROM */
         #romUrl {
-            width: 18em;
+            width: 14em;
             padding: 0.6em 0.4em;
             font-family: monospace;
             font-weight: bold;
@@ -156,31 +132,65 @@
             background-color: #45a049;
         }
 
+        /* Estilos para o rodapé */
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 16px;
+            z-index: 1000;
+        }
+
+        /* Nova classe para posicionar o título */
+        .title {
+            position: fixed;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
+    <!-- Ícones e logo -->
     <img src="docs/huehue.png" alt="Icon Left" class="icon-left">
     <img src="docs/hue.png" alt="Icon Right" class="icon-right">
     
+    <!-- Cabeçalho -->
     <header id="top">
-        <h1>RetroHueHue JS</h1>
-        <p class="credit">Editado por Junior Games</p>
+        <h1 class="title">🔥🎮 RetroHueHue JS 🎮🔥</h1>
         <img src="docs/Logo-light.png" alt="Logo" class="logo">
     </header>
+    
+    <!-- Caixa principal -->
     <main id="box">
         <select id="selectCore">
             <option value="" selected disabled hidden>Escolha o Console</option>
             <option value="atari2600">Atari - 2600</option>
             <option value="atari7800">Atari - 7800</option>
-            <option value="coleco">ColecoVision</option>
+            <option value="lynx">Atari - Lynx</option>
+            <option value="jaguar">Atari - Jaguar</option>
+            <option value="ws">Bandai - WonderSwan</option>
+            <option value="coleco">Coleco - Vision</option>
+            <option value="vice_x64sc">Commodore - 64</option>
+            <option value="vice_x128">Commodore - 128</option>
+            <option value="vice_xvic">Commodore - VIC20</option>
+            <option value="vice_xplus4">Commodore - Plus/4</option>
+            <option value="vice_xpet">Commodore - PET</option>
+            <option value="n64">Nintendo - 64</option>
+            <option value="nds">Nintendo - DS</option>
             <option value="gb">Nintendo - Game Boy</option>
             <option value="gba">Nintendo - GB Advance</option>
-            <option value="nds">Nintendo - DS</option>
             <option value="nes">Nintendo - NES</option>
             <option value="snes">Nintendo - Super NES</option>
-            <option value="n64">Nintendo - 64</option>
             <option value="pcfx">NEC - PC-FX</option>
             <option value="pce">NEC - TurboGrafx-16</option>
+            <option value="pce">NEC - PC Engine</option>
+            <option value="pce">NEC - SuperGrafx</option>
             <option value="psx">Sony - PlayStation</option>
             <option value="sega32x">Sega - 32X</option>
             <option value="segaCD">Sega - Mega CD</option>
@@ -188,42 +198,38 @@
             <option value="segaMD">Sega - Mega Drive</option>
             <option value="segaMS">Sega - Master System</option>
             <option value="segaSaturn">Sega - Saturn</option>
-            <option value="lynx">Atari - Lynx</option>
-            <option value="jaguar">Atari - Jaguar</option>
             <option value="vb">Nintendo - Virtual Boy</option>
-            <option value="vice_x64sc">Commodore 64</option>
-            <option value="vice_x128">Commodore 128</option>
-            <option value="vice_xvic">Commodore VIC20</option>
-            <option value="vice_xplus4">Commodore Plus/4</option>
-            <option value="vice_xpet">Commodore PET</option>
             <option value="ngp">SNK NeoGeo - Pocket</option>
-            <option value="ws">Bandai - WonderSwan</option>
         </select>
         <br>
         <input type="file" id="fileInput" style="display: none;" accept="">
         <button class="custom-button" id="loadLocalBtn" onclick="openFile()">Carregar ROM Localmente</button>
         <br>
-        <input type="text" id="romUrl" placeholder="Cole o link direto da ROM">
-        <button class="custom-button" onclick="loadRom()">JOGAR</button>
+        <input type="text" id="romUrl" placeholder="Link direto da ROM">
+        <button class="custom-button" onclick="loadRom()">🔥🎮 JOGAR 🎮🔥</button>
     </main>
-    
-    <p class="header">Projeto RetroGames HueHue</p>
 
+    <!-- Rodapé -->
+    <div id="footer" style="position: fixed; bottom: 10; width: 100%; text-align: center; color: white; font-family: monospace; font-weight: bold; font-size: 16px; z-index: 1000;">
+        🔥🎮 Projeto RetroGames HueHue 🎮🔥
+    </div>
+
+    <!-- Scripts -->
     <script>
         let enableDebug = false;
+
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         if (urlParams.get('debug') === '1') {
             enableDebug = true;
         }
 
-        console.log(`Debug is ${enableDebug ? 'enabled' : 'disabled'}`);
-
         const selectCore = document.getElementById('selectCore');
         const romUrlInput = document.getElementById('romUrl');
         const fileInput = document.getElementById('fileInput');
         const loadLocalBtn = document.getElementById('loadLocalBtn');
 
+        // Ordenar opções do select
         const optionsArray = Array.from(selectCore.options);
         optionsArray.sort((a, b) => a.text.localeCompare(b.text));
         selectCore.innerHTML = "";
@@ -264,6 +270,10 @@
 
             script.src = "data/loader.js";
             document.body.appendChild(script);
+
+            hideIconsAndHeader();
+            expandBox();
+            hideFooter();
         }
 
         function loadGameFromFile(file, core) {
@@ -286,6 +296,25 @@
                 loadLocalBtn.textContent = 'Carregar ROM Localmente';
             }
         });
+
+        function hideIconsAndHeader() {
+            const icons = document.querySelectorAll('.icon-left, .icon-right');
+            const header = document.getElementById('top');
+            icons.forEach(icon => icon.style.display = 'none');
+            header.style.display = 'none';
+        }
+
+        function expandBox() {
+            const box = document.getElementById('box');
+            box.style.height = '65em';
+            box.style.width = '65em';
+            box.style.maxWidth = '95%';
+            box.style.maxHeight = '95%';
+        }
+        
+        function hideFooter() {
+            document.getElementById('footer').style.display = 'none';
+        }
     </script>
 </body>
 </html>
