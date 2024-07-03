@@ -134,7 +134,7 @@
 
         /* Estilos para o rodapé */
         #footer {
-            position: absolute;
+            position: fixed;
             bottom: 10px;
             width: 100%;
             text-align: center;
@@ -153,6 +153,13 @@
             text-align: center;
             z-index: 1000;
             font-size: 125%; /* Reduzir o tamanho da fonte para 125% */
+        }
+
+        /* Media query para ocultar ícones em dispositivos móveis */
+        @media (max-width: 768px) {
+            .icon-left, .icon-right {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -211,7 +218,7 @@
     </main>
 
     <!-- Rodapé -->
-    <div id="footer" style="position: fixed; bottom: 10; width: 100%; text-align: center; color: white; font-family: monospace; font-weight: bold; font-size: 16px; z-index: 1000;">
+    <div id="footer">
         🔥🎮 Projeto RetroGames HueHue 🎮🔥
     </div>
 
